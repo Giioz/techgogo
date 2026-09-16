@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { Star, Clock, BookOpen, ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { Course } from "@/types";
@@ -27,6 +28,16 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, index = 0 }) => 
   const instructorRole = tr?.instructorRole || course.instructor.role;
   const duration = tr?.duration || course.duration;
   const badge = tr?.badge || course.badge;
+
+  const slugMap: Record<string, string> = {
+    "course-1": "ai-tools",
+    "course-2": "digital-marketing",
+    "course-3": "graphic-design",
+    "course-4": "graphic-design-cohort-2",
+    "course-5": "ui-ux",
+    "course-6": "tech-recruiting",
+  };
+  const courseSlug = course.slug || slugMap[course.id] || course.id;
 
   const titleSizeClass =
     language === "ka"
@@ -80,9 +91,11 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, index = 0 }) => 
         </div>
 
         {/* COURSE TITLE */}
-        <h3 className={`font-display font-bold ${titleSizeClass} text-tech-black tracking-tight group-hover:text-orangeAccent transition-colors`}>
-          {title}
-        </h3>
+        <Link href={`/${language}/courses/${courseSlug}`} className="block">
+          <h3 className={`font-display font-bold ${titleSizeClass} text-tech-black tracking-tight group-hover:text-orangeAccent transition-colors`}>
+            {title}
+          </h3>
+        </Link>
 
         {/* SHORT METADATA (Duration, Lessons, Rating) */}
         <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 text-xs font-semibold text-tech-muted mb-4 pb-4 border-b border-tech-black/10">
@@ -139,14 +152,16 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, index = 0 }) => 
           )}
         </div>
 
-        <motion.button
-          whileHover={{ scale: 1.05, y: -2 }}
-          whileTap={{ scale: 0.95 }}
-          className="tactile-btn inline-flex items-center gap-1 px-3.5 sm:px-4 py-2 rounded-full bg-cream border-[1.5px] border-tech-black font-bold text-xs text-tech-black shadow-tactile-sm hover:bg-orangeAccent hover:shadow-tactile group-hover:bg-orangeAccent transition-colors whitespace-nowrap"
-        >
-          <span>{t.coursesSection.enrollNow}</span>
-          <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
-        </motion.button>
+        <Link href={`/${language}/courses/${courseSlug}`}>
+          <motion.span
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.95 }}
+            className="tactile-btn inline-flex items-center gap-1 px-3.5 sm:px-4 py-2 rounded-full bg-cream border-[1.5px] border-tech-black font-bold text-xs text-tech-black shadow-tactile-sm hover:bg-orangeAccent hover:shadow-tactile group-hover:bg-orangeAccent transition-colors whitespace-nowrap cursor-pointer"
+          >
+            <span>{t.coursesSection.enrollNow}</span>
+            <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
+          </motion.span>
+        </Link>
       </div>
     </motion.div>
   );

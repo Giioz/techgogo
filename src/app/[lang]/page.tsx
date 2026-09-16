@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import Hero from "@/components/Hero";
 import SectionHeading from "@/components/SectionHeading";
 import SubjectPills from "@/components/SubjectPills";
@@ -15,7 +16,7 @@ import { useLanguage } from "@/context/LanguageContext";
 
 export default function HomePage() {
   const [selectedSubject, setSelectedSubject] = useState<string>("all");
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
 
   // Prevent browser scroll restoration jitter on refresh
   useEffect(() => {
@@ -60,13 +61,13 @@ export default function HomePage() {
             subtitle={t.coursesSection.subtitle}
           />
 
-          <a
-            href="#all-courses"
+          <Link
+            href={`/${language}/courses`}
             className="group hidden md:inline-flex items-center gap-2 px-5 py-3 rounded-full bg-cream border-[1.5px] border-tech-black text-xs font-bold text-tech-black shadow-tactile-sm hover:shadow-tactile transition-all mb-8 cursor-pointer"
           >
             <span>{t.coursesSection.viewAll}</span>
             <span className="group-hover:translate-x-1 transition-transform">→</span>
-          </a>
+          </Link>
         </div>
 
         {/* SUBJECT FILTER PILLS */}
@@ -86,10 +87,13 @@ export default function HomePage() {
 
         {/* Mobile View All Button */}
         <div className="mt-8 text-center md:hidden">
-          <button className="tactile-btn inline-flex items-center gap-2 px-6 py-3 rounded-full bg-cream border-[1.5px] border-tech-black text-xs font-bold text-tech-black shadow-tactile-sm">
+          <Link
+            href={`/${language}/courses`}
+            className="tactile-btn inline-flex items-center gap-2 px-6 py-3 rounded-full bg-cream border-[1.5px] border-tech-black text-xs font-bold text-tech-black shadow-tactile-sm"
+          >
             <span>{t.coursesSection.viewAll}</span>
             <span>→</span>
-          </button>
+          </Link>
         </div>
       </section>
 

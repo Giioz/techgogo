@@ -1,15 +1,20 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { ChevronDown, Menu, X, Sparkles, ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { ChevronDown, Menu, X, ArrowRight, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
+import { TECHGOGO_COURSES } from "@/data/coursesData";
+import { TECHGOGO_SERVICES } from "@/data/servicesData";
 
 export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
   const { language, setLanguage, t } = useLanguage();
+  const pathname = usePathname();
   const navRef = useRef<HTMLElement>(null);
 
   // Close dropdown on click outside
@@ -33,26 +38,45 @@ export const Navbar: React.FC = () => {
     };
   }, []);
 
-  const handleSmoothScroll = (targetId: string) => {
-    setActiveDropdown(null);
-    setMobileMenuOpen(false);
-    const element = document.getElementById(targetId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
-
   const navItems = [
-    { id: "subjects", label: t.navbar.subjects, hasDropdown: true, targetId: "courses" },
-    { id: "courses", label: t.navbar.courses, hasDropdown: true, targetId: "courses" },
-    { id: "degrees", label: t.navbar.degrees, hasDropdown: false, targetId: "learning-preview" },
-    { id: "business", label: t.navbar.business, hasDropdown: false, targetId: "value-props" },
+    {
+      id: "courses",
+      label: language === "ka" ? "კურსები" : "Courses",
+      href: `/${language}/courses`,
+      hasDropdown: true,
+    },
+    {
+      id: "services",
+      label: language === "ka" ? "სერვისები" : "Services",
+      href: `/${language}/services`,
+      hasDropdown: true,
+    },
+    {
+      id: "about",
+      label: language === "ka" ? "ჩვენ შესახებ" : "About Us",
+      href: `/${language}/about`,
+      hasDropdown: false,
+    },
+    {
+      id: "news",
+      label: language === "ka" ? "სიახლეები" : "News",
+      href: `/${language}/news`,
+      hasDropdown: false,
+    },
+    {
+      id: "contact",
+      label: language === "ka" ? "კონტაქტი" : "Contact",
+      href: `/${language}/contact`,
+      hasDropdown: false,
+    },
   ];
 
   const navItemClass =
     language === "ka"
-      ? "relative z-10 flex items-center gap-1.5 px-3.5 py-2 text-[13px] lg:text-sm font-semibold text-tech-black/90 hover:text-tech-black rounded-full transition-colors whitespace-nowrap select-none"
-      : "relative z-10 flex items-center gap-1.5 px-3.5 py-2 text-sm font-semibold text-tech-black/90 hover:text-tech-black rounded-full transition-colors whitespace-nowrap select-none";
+      ? "relative z-10 flex items-center gap-1.5 px-3 sm:px-3.5 py-2 text-[13px] lg:text-sm font-semibold text-tech-black/90 hover:text-tech-black rounded-full transition-colors whitespace-nowrap select-none"
+      : "relative z-10 flex items-center gap-1.5 px-3 sm:px-3.5 py-2 text-sm font-semibold text-tech-black/90 hover:text-tech-black rounded-full transition-colors whitespace-nowrap select-none";
+
+  const isHome = pathname === `/${language}` || pathname === `/${language}/` || pathname === "/";
 
   return (
     <motion.nav
@@ -64,8 +88,14 @@ export const Navbar: React.FC = () => {
     >
       {/* LEFT: TECHGOGO WORDMARK & INTERACTIVE LOGO */}
       <div className="flex items-center gap-2.5">
-        <button
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        <Link
+          href={`/${language}`}
+          onClick={(e) => {
+            if (isHome) {
+              e.preventDefault();
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+          }}
           className="group flex items-center gap-2 text-decoration-none text-left cursor-pointer focus:outline-none"
           aria-label="TechGogo Home"
         >
@@ -102,30 +132,31 @@ export const Navbar: React.FC = () => {
               className="w-1.5 h-1.5 rounded-full bg-tech-black ml-0.5 mb-1 inline-block"
             />
           </div>
-        </button>
+        </Link>
       </div>
 
       {/* CENTER: EDITORIAL NAVIGATION LINKS WITH SLIDING PILL (DESKTOP) */}
       <div
-        className="hidden md:flex items-center gap-0.5 lg:gap-1 relative"
+        className="hidden lg:flex items-center gap-0.5 lg:gap-1 relative"
         onMouseLeave={() => setHoveredNav(null)}
       >
         {navItems.map((item) => {
           const isDropdownOpen = activeDropdown === item.id;
           const isHovered = hoveredNav === item.id;
+          const isActive = pathname?.startsWith(item.href);
 
           return (
             <div key={item.id} className="relative">
-              <button
-                onClick={() => {
+              <Link
+                href={item.href}
+                onClick={(e) => {
                   if (item.hasDropdown) {
+                    e.preventDefault();
                     setActiveDropdown(isDropdownOpen ? null : item.id);
-                  } else {
-                    handleSmoothScroll(item.targetId);
                   }
                 }}
                 onMouseEnter={() => setHoveredNav(item.id)}
-                className={navItemClass}
+                className={`${navItemClass} ${isActive ? "text-tech-black font-extrabold" : ""}`}
                 aria-expanded={item.hasDropdown ? isDropdownOpen : undefined}
               >
                 {/* Floating Neo-Brutalist Indicator Pill on Hover */}
@@ -147,9 +178,9 @@ export const Navbar: React.FC = () => {
                     <ChevronDown className="w-3.5 h-3.5 opacity-60" />
                   </motion.div>
                 )}
-              </button>
+              </Link>
 
-              {/* TACTILE DROPDOWN POPOVER FOR SUBJECTS / COURSES */}
+              {/* TACTILE DROPDOWN POPOVER FOR COURSES & SERVICES */}
               <AnimatePresence>
                 {item.hasDropdown && isDropdownOpen && (
                   <motion.div
@@ -157,54 +188,73 @@ export const Navbar: React.FC = () => {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 8, scale: 0.96 }}
                     transition={{ duration: 0.18, ease: "easeOut" }}
-                    className="absolute top-full left-0 mt-2.5 w-72 bg-cream-pure border-[1.5px] border-tech-black rounded-2xl p-2 shadow-tactile-md z-50 flex flex-col gap-1"
+                    className="absolute top-full left-0 mt-2.5 w-80 bg-cream-pure border-[1.5px] border-tech-black rounded-2xl p-2.5 shadow-tactile-md z-50 flex flex-col gap-1.5"
                   >
-                    {item.id === "subjects" ? (
-                      t.subjects.slice(1, 6).map((sub) => (
-                        <button
-                          key={sub.id}
-                          onClick={() => handleSmoothScroll("courses")}
-                          className="group/item flex items-start gap-2.5 p-2 rounded-xl text-left hover:bg-black/5 transition-colors"
+                    {item.id === "courses" ? (
+                      <>
+                        <div className="px-2 py-1 text-[11px] font-bold text-tech-muted uppercase tracking-wider border-b border-tech-black/10">
+                          {language === "ka" ? "აკადემიის კურსები" : "Academy Courses"}
+                        </div>
+                        {TECHGOGO_COURSES.slice(0, 5).map((c) => (
+                          <Link
+                            key={c.id}
+                            href={`/${language}/courses/${c.slug}`}
+                            onClick={() => setActiveDropdown(null)}
+                            className="group/item flex items-start gap-2.5 p-2 rounded-xl text-left hover:bg-black/5 transition-colors"
+                          >
+                            <span className="w-5 h-5 rounded-md bg-yellowAccent/40 border border-tech-black/30 flex items-center justify-center text-[10px] shrink-0 mt-0.5 group-hover/item:rotate-6 transition-transform">
+                              ✦
+                            </span>
+                            <div className="flex flex-col">
+                              <span className="text-xs font-bold text-tech-black line-clamp-1">
+                                {c.title}
+                              </span>
+                              <span className="text-[11px] text-tech-muted">
+                                {c.format} • {c.price}
+                              </span>
+                            </div>
+                          </Link>
+                        ))}
+                        <Link
+                          href={`/${language}/courses`}
+                          onClick={() => setActiveDropdown(null)}
+                          className="mt-1 pt-2 border-t border-tech-black/10 text-xs font-extrabold text-orangeAccent hover:underline flex items-center justify-between px-2"
                         >
-                          <span className="w-5 h-5 rounded-md bg-yellowAccent/40 border border-tech-black/30 flex items-center justify-center text-[10px] shrink-0 mt-0.5 group-hover/item:rotate-6 transition-transform">
-                            ✦
-                          </span>
-                          <div className="flex flex-col">
-                            <span className="text-xs font-bold text-tech-black">
-                              {sub.name}
-                            </span>
-                            <span className="text-[11px] text-tech-muted leading-tight">
-                              {sub.description}
-                            </span>
-                          </div>
-                        </button>
-                      ))
+                          <span>{language === "ka" ? "ყველა კურსი →" : "View All Courses →"}</span>
+                        </Link>
+                      </>
                     ) : (
                       <>
-                        <button
-                          onClick={() => handleSmoothScroll("courses")}
-                          className="group/item flex items-center justify-between p-2 rounded-xl text-left hover:bg-black/5 transition-colors"
-                        >
-                          <div className="flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-orangeAccent" />
-                            <span className="text-xs font-bold text-tech-black">
-                              {t.coursesSection.titlePart1} {t.coursesSection.coursesWord}
+                        <div className="px-2 py-1 text-[11px] font-bold text-tech-muted uppercase tracking-wider border-b border-tech-black/10">
+                          {language === "ka" ? "სააგენტოს სერვისები" : "Agency Services"}
+                        </div>
+                        {TECHGOGO_SERVICES.map((s) => (
+                          <Link
+                            key={s.id}
+                            href={`/${language}/services/${s.slug}`}
+                            onClick={() => setActiveDropdown(null)}
+                            className="group/item flex items-start gap-2.5 p-2 rounded-xl text-left hover:bg-black/5 transition-colors"
+                          >
+                            <span className="w-5 h-5 rounded-md bg-orangeAccent/25 border border-tech-black/30 flex items-center justify-center text-[10px] shrink-0 mt-0.5 group-hover/item:rotate-6 transition-transform">
+                              ✦
                             </span>
-                          </div>
-                          <ArrowRight className="w-3.5 h-3.5 text-tech-muted group-hover/item:translate-x-0.5 transition-transform" />
-                        </button>
-                        <button
-                          onClick={() => handleSmoothScroll("learning-preview")}
-                          className="group/item flex items-center justify-between p-2 rounded-xl text-left hover:bg-black/5 transition-colors"
+                            <div className="flex flex-col">
+                              <span className="text-xs font-bold text-tech-black">
+                                {s.title}
+                              </span>
+                              <span className="text-[11px] text-tech-muted line-clamp-1">
+                                {s.shortDesc}
+                              </span>
+                            </div>
+                          </Link>
+                        ))}
+                        <Link
+                          href={`/${language}/services`}
+                          onClick={() => setActiveDropdown(null)}
+                          className="mt-1 pt-2 border-t border-tech-black/10 text-xs font-extrabold text-orangeAccent hover:underline flex items-center justify-between px-2"
                         >
-                          <div className="flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-purpleAccent" />
-                            <span className="text-xs font-bold text-tech-black">
-                              {t.learningPreview.badge}
-                            </span>
-                          </div>
-                          <ArrowRight className="w-3.5 h-3.5 text-tech-muted group-hover/item:translate-x-0.5 transition-transform" />
-                        </button>
+                          <span>{language === "ka" ? "სერვისების კატალოგი →" : "All Services →"}</span>
+                        </Link>
                       </>
                     )}
                   </motion.div>
@@ -215,8 +265,8 @@ export const Navbar: React.FC = () => {
         })}
       </div>
 
-      {/* RIGHT: LANGUAGE TOGGLE & ACTIONS */}
-      <div className="hidden sm:flex items-center gap-2.5 lg:gap-4">
+      {/* RIGHT: LANGUAGE TOGGLE & DONATE CTA BUTTON */}
+      <div className="hidden sm:flex items-center gap-2.5 lg:gap-3.5">
         {/* GEORGIAN / ENGLISH LANGUAGE SWITCHER WITH SLIDING PILL */}
         <div className="relative flex items-center p-0.5 rounded-full bg-cream-muted border-[1.5px] border-tech-black shadow-tactile-sm">
           <button
@@ -255,19 +305,8 @@ export const Navbar: React.FC = () => {
           </button>
         </div>
 
-        {/* SIGN UP LINK */}
-        <motion.button
-          onClick={() => handleSmoothScroll("footer")}
-          whileHover={{ scale: 1.05, y: -1 }}
-          whileTap={{ scale: 0.96 }}
-          className="text-xs sm:text-sm font-semibold text-tech-black/80 hover:text-tech-black px-2 py-2 transition-colors whitespace-nowrap cursor-pointer"
-        >
-          {t.navbar.signup}
-        </motion.button>
-
-        {/* LOG IN CTA BUTTON */}
-        <motion.button
-          onClick={() => handleSmoothScroll("footer")}
+        {/* DONATION CTA BUTTON (PRIMARY BRAND ACTION) */}
+        <motion.div
           whileHover={{
             scale: 1.04,
             y: -2,
@@ -279,19 +318,20 @@ export const Navbar: React.FC = () => {
             boxShadow: "1px 1px 0px #111111",
           }}
           transition={{ type: "spring", stiffness: 420, damping: 22 }}
-          className="tactile-btn inline-flex items-center gap-1.5 px-4 sm:px-5 py-2 rounded-full bg-orangeAccent text-tech-black font-bold text-xs sm:text-sm tracking-wide border-[1.5px] border-tech-black shadow-tactile-sm cursor-pointer whitespace-nowrap group"
         >
-          <span>{t.navbar.login}</span>
-          <motion.span
-            className="inline-block transition-transform group-hover:translate-x-0.5"
+          <Link
+            href={`/${language}/donate`}
+            className="tactile-btn inline-flex items-center gap-1.5 px-4 sm:px-5 py-2 rounded-full bg-orangeAccent text-tech-black font-bold text-xs sm:text-sm tracking-wide border-[1.5px] border-tech-black shadow-tactile-sm cursor-pointer whitespace-nowrap group"
           >
-            →
-          </motion.span>
-        </motion.button>
+            <span className="text-xs">✦</span>
+            <span>{language === "ka" ? "დონაცია" : "Donate"}</span>
+            <ArrowRight className="w-3.5 h-3.5 stroke-[2.5] transition-transform group-hover:translate-x-0.5" />
+          </Link>
+        </motion.div>
       </div>
 
       {/* MOBILE ACTIONS & HAMBURGER TOGGLE */}
-      <div className="flex items-center gap-2 sm:hidden">
+      <div className="flex items-center gap-2 lg:hidden">
         {/* Mobile Language Switcher with Animated Pill */}
         <div className="relative flex items-center p-0.5 rounded-full bg-cream-muted border-[1.5px] border-tech-black shadow-tactile-sm">
           <button
@@ -354,37 +394,35 @@ export const Navbar: React.FC = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.97 }}
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            className="md:hidden absolute top-full left-4 right-4 mt-2 bg-cream-pure border-[1.5px] border-tech-black rounded-3xl p-5 shadow-tactile-lg z-50 flex flex-col gap-3"
+            className="lg:hidden absolute top-full left-4 right-4 mt-2 bg-cream-pure border-[1.5px] border-tech-black rounded-3xl p-5 shadow-tactile-lg z-50 flex flex-col gap-2.5 max-h-[85vh] overflow-y-auto"
           >
             {navItems.map((item, index) => (
-              <motion.button
+              <motion.div
                 key={item.id}
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.05 }}
-                onClick={() => handleSmoothScroll(item.targetId)}
-                className="flex items-center justify-between py-2.5 border-b border-tech-black/10 text-base font-semibold text-tech-black text-left"
+                transition={{ delay: index * 0.04 }}
               >
-                <span>{item.label}</span>
-                <ChevronDown className="w-4 h-4 opacity-50 -rotate-90" />
-              </motion.button>
+                <Link
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-between py-2.5 px-3 rounded-xl hover:bg-black/5 text-base font-bold text-tech-black transition-colors"
+                >
+                  <span>{item.label}</span>
+                  <ArrowRight className="w-4 h-4 opacity-40" />
+                </Link>
+              </motion.div>
             ))}
 
-            <div className="pt-3 flex flex-col gap-2.5">
-              <motion.button
-                whileTap={{ scale: 0.97 }}
-                onClick={() => handleSmoothScroll("footer")}
-                className="w-full text-center py-2.5 rounded-full bg-orangeAccent text-tech-black font-bold text-sm border-[1.5px] border-tech-black shadow-tactile-sm"
+            <div className="pt-3 border-t border-tech-black/10 flex flex-col gap-2.5">
+              <Link
+                href={`/${language}/donate`}
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full text-center py-3 rounded-full bg-orangeAccent text-tech-black font-extrabold text-sm border-[1.5px] border-tech-black shadow-tactile-sm inline-flex items-center justify-center gap-2"
               >
-                {t.navbar.login}
-              </motion.button>
-              <motion.button
-                whileTap={{ scale: 0.97 }}
-                onClick={() => handleSmoothScroll("footer")}
-                className="w-full text-center py-2.5 rounded-full bg-white text-tech-black font-semibold text-sm border-[1.5px] border-tech-black"
-              >
-                {t.navbar.signup}
-              </motion.button>
+                <span>✦</span>
+                <span>{language === "ka" ? "დონაცია" : "Donate"}</span>
+              </Link>
             </div>
           </motion.div>
         )}
