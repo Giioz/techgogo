@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Star } from "lucide-react";
+import { motion } from "framer-motion";
 import SectionHeading from "./SectionHeading";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -24,7 +25,19 @@ export const Testimonials: React.FC = () => {
         subtitle={test.subtitle}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-40px" }}
+        variants={{
+          hidden: { opacity: 0 },
+          visible: {
+            opacity: 1,
+            transition: { staggerChildren: 0.12 },
+          },
+        }}
+        className="grid grid-cols-1 md:grid-cols-3 gap-6"
+      >
         {test.items.map((rev, idx) => {
           const avatarBgs = {
             orange: "bg-[#FF5A3D]",
@@ -34,9 +47,19 @@ export const Testimonials: React.FC = () => {
           const accent = accents[idx] || "orange";
 
           return (
-            <div
+            <motion.div
               key={idx}
-              className="tactile-card bg-cream border-[1.5px] border-tech-black rounded-3xl p-6 sm:p-7 flex flex-col justify-between shadow-tactile-sm hover:shadow-tactile transition-all"
+              variants={{
+                hidden: { opacity: 0, y: 24, scale: 0.97 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  scale: 1,
+                  transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] },
+                },
+              }}
+              whileHover={{ y: -6, scale: 1.015 }}
+              className="tactile-card group bg-cream border-[1.5px] border-tech-black rounded-3xl p-6 sm:p-7 flex flex-col justify-between shadow-tactile-sm hover:shadow-tactile-lg transition-all cursor-default"
             >
               <div>
                 {/* Rating Stars */}
@@ -44,7 +67,8 @@ export const Testimonials: React.FC = () => {
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      className="w-4 h-4 fill-yellowAccent text-[#C99E25]"
+                      className="w-4 h-4 fill-yellowAccent text-[#C99E25] transition-transform group-hover:scale-110"
+                      style={{ transitionDelay: `${i * 40}ms` }}
                     />
                   ))}
                 </div>
@@ -57,18 +81,19 @@ export const Testimonials: React.FC = () => {
 
               {/* Author Row */}
               <div className="pt-4 border-t border-tech-black/10 flex items-center gap-3">
-                <div
+                <motion.div
+                  whileHover={{ rotate: 12, scale: 1.1 }}
                   className={`w-10 h-10 rounded-2xl border-[1.5px] border-tech-black flex items-center justify-center font-display font-extrabold text-xs text-tech-black shadow-tactile-sm ${
                     avatarBgs[accent]
                   }`}
                 >
                   {initials[idx]}
-                </div>
+                </motion.div>
                 <div>
                   <h4 className="font-bold text-xs sm:text-sm text-tech-black leading-tight">
                     {rev.name}
                   </h4>
-                  <p className="text-[11px] font-medium text-tech-muted leading-tight">
+                  <p className="text-[11px] font-medium text-tech-muted leading-tight mt-0.5">
                     {rev.role}
                   </p>
                   <span className="text-[10px] font-semibold text-orangeAccent">
@@ -76,10 +101,10 @@ export const Testimonials: React.FC = () => {
                   </span>
                 </div>
               </div>
-            </div>
+            </motion.div>
           );
         })}
-      </div>
+      </motion.div>
     </section>
   );
 };

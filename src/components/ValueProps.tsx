@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Terminal, Users, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
 import SectionHeading from "./SectionHeading";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -29,8 +30,20 @@ export const ValueProps: React.FC = () => {
         subtitle={why.subtitle}
       />
 
-      {/* ASYMMETRIC 3-COLUMN EDITORIAL CARDS */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* ASYMMETRIC 3-COLUMN EDITORIAL CARDS WITH STAGGERED SCROLL ENTRANCE */}
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-40px" }}
+        variants={{
+          hidden: { opacity: 0 },
+          visible: {
+            opacity: 1,
+            transition: { staggerChildren: 0.14 },
+          },
+        }}
+        className="grid grid-cols-1 md:grid-cols-3 gap-6"
+      >
         {why.items.map((v, i) => {
           const Icon = icons[i] || Sparkles;
           const accent = accents[i] || "orange";
@@ -47,17 +60,30 @@ export const ValueProps: React.FC = () => {
           };
 
           return (
-            <div
+            <motion.div
               key={i}
-              className={`tactile-card bg-cream border-[1.5px] border-tech-black rounded-3xl sm:rounded-4xl p-6 sm:p-8 flex flex-col justify-between shadow-tactile-sm hover:shadow-tactile transition-all duration-200 ${
+              variants={{
+                hidden: { opacity: 0, y: 28, scale: 0.96 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  scale: 1,
+                  transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+                },
+              }}
+              whileHover={{ y: -6, scale: 1.015 }}
+              className={`tactile-card group bg-cream border-[1.5px] border-tech-black rounded-3xl sm:rounded-4xl p-6 sm:p-8 flex flex-col justify-between shadow-tactile-sm hover:shadow-tactile-lg transition-all duration-200 cursor-default ${
                 bgAccents[accent]
               }`}
             >
               <div>
                 <div className="flex items-center justify-between mb-6">
-                  <div className="w-12 h-12 rounded-2xl bg-cream border-[1.5px] border-tech-black flex items-center justify-center shadow-tactile-sm">
+                  <motion.div
+                    whileHover={{ rotate: 12, scale: 1.1 }}
+                    className="w-12 h-12 rounded-2xl bg-cream border-[1.5px] border-tech-black flex items-center justify-center shadow-tactile-sm transition-transform"
+                  >
                     <Icon className="w-6 h-6 text-tech-black" />
-                  </div>
+                  </motion.div>
                   <span
                     className={`text-[11px] font-bold px-3 py-1 rounded-full border ${
                       badgeAccents[accent]
@@ -67,7 +93,7 @@ export const ValueProps: React.FC = () => {
                   </span>
                 </div>
 
-                <h3 className={`font-display font-bold ${cardTitleSize} text-tech-black`}>
+                <h3 className={`font-display font-bold ${cardTitleSize} text-tech-black group-hover:text-orangeAccent transition-colors`}>
                   {v.title}
                 </h3>
 
@@ -78,12 +104,14 @@ export const ValueProps: React.FC = () => {
 
               <div className="pt-4 border-t border-tech-black/10 flex items-center justify-between text-xs font-bold text-tech-black">
                 <span>{why.exploreMethodology}</span>
-                <span className="text-base">→</span>
+                <span className="text-base transform group-hover:translate-x-1.5 transition-transform">
+                  →
+                </span>
               </div>
-            </div>
+            </motion.div>
           );
         })}
-      </div>
+      </motion.div>
     </section>
   );
 };

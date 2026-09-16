@@ -1,14 +1,24 @@
 "use client";
 
 import React from "react";
+import { motion } from "framer-motion";
 
 export const HeroIllustration: React.FC = () => {
   return (
-    <div className="relative w-full max-w-[560px] mx-auto lg:max-w-none flex items-center justify-center select-none">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.92, y: 20 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
+      className="relative w-full max-w-[560px] mx-auto lg:max-w-none flex items-center justify-center select-none"
+    >
       {/* Decorative background aura & organic shapes */}
       <div className="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none">
         {/* Soft pastel aura */}
-        <div className="w-[380px] h-[380px] sm:w-[460px] sm:h-[460px] rounded-full bg-[#EADFF2]/60 blur-2xl" />
+        <motion.div
+          animate={{ scale: [1, 1.06, 1], opacity: [0.6, 0.75, 0.6] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          className="w-[380px] h-[380px] sm:w-[460px] sm:h-[460px] rounded-full bg-[#EADFF2]/60 blur-2xl"
+        />
       </div>
 
       <svg
@@ -39,24 +49,28 @@ export const HeroIllustration: React.FC = () => {
         <circle cx="490" cy="180" r="45" fill="#FDCC42" fillOpacity="0.18" />
         <circle cx="460" cy="380" r="60" fill="#BD94F4" fillOpacity="0.15" />
 
-        {/* Four-point stars (✦) */}
+        {/* Four-point stars (✦) with twinkling animations */}
         {/* Star 1 - Orange Top Left */}
-        <path
-          d="M130 95 Q130 110 115 110 Q130 110 130 125 Q130 110 145 110 Q130 110 130 95 Z"
-          fill="#FF5A3D"
-          className="animate-subtle-float"
-        />
+        <g className="animate-twinkle origin-center" style={{ transformOrigin: "130px 110px" }}>
+          <path
+            d="M130 95 Q130 110 115 110 Q130 110 130 125 Q130 110 145 110 Q130 110 130 95 Z"
+            fill="#FF5A3D"
+          />
+        </g>
         {/* Star 2 - Purple Right */}
-        <path
-          d="M545 130 Q545 145 530 145 Q545 145 545 160 Q545 145 560 145 Q545 145 545 130 Z"
-          fill="#BD94F4"
-          className="animate-subtle-float-delayed"
-        />
+        <g className="animate-twinkle-delayed origin-center" style={{ transformOrigin: "545px 145px" }}>
+          <path
+            d="M545 130 Q545 145 530 145 Q545 145 545 160 Q545 145 560 145 Q545 145 545 130 Z"
+            fill="#BD94F4"
+          />
+        </g>
         {/* Star 3 - Yellow Bottom Left */}
-        <path
-          d="M80 330 Q80 342 68 342 Q80 342 80 354 Q80 342 92 342 Q80 342 80 330 Z"
-          fill="#FDCC42"
-        />
+        <g className="animate-twinkle origin-center" style={{ transformOrigin: "80px 342px" }}>
+          <path
+            d="M80 330 Q80 342 68 342 Q80 342 80 354 Q80 342 92 342 Q80 342 80 330 Z"
+            fill="#FDCC42"
+          />
+        </g>
         {/* Star 4 - Small Accent Top Right */}
         <path
           d="M480 55 Q480 65 470 65 Q480 65 480 75 Q480 65 490 65 Q480 65 480 55 Z"
@@ -65,8 +79,12 @@ export const HeroIllustration: React.FC = () => {
 
         {/* 2. FLOATING EDITORIAL INTERFACE CARDS */}
 
-        {/* Floating Code Snippet Card (Top Left) */}
-        <g className="animate-subtle-float" style={{ animationDuration: "7s" }}>
+        {/* Floating Code Snippet Card (Top Left) with spring float */}
+        <motion.g
+          animate={{ y: [0, -10, 0], rotate: [0, 1.2, 0] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          whileHover={{ scale: 1.05, cursor: "pointer" }}
+        >
           {/* Card shadow */}
           <rect x="73" y="143" width="170" height="92" rx="14" fill="#111111" />
           {/* Card body */}
@@ -85,16 +103,20 @@ export const HeroIllustration: React.FC = () => {
           <circle cx="98" cy="154" r="3.5" fill="#FDCC42" stroke="#111111" strokeWidth="1" />
           <circle cx="110" cy="154" r="3.5" fill="#BD94F4" stroke="#111111" strokeWidth="1" />
           <line x1="70" y1="166" x2="240" y2="166" stroke="#111111" strokeWidth="1.5" />
-          {/* Code lines */}
+          {/* Code lines with animated subtle highlight */}
           <rect x="85" y="176" width="38" height="6" rx="3" fill="#BD94F4" />
           <rect x="128" y="176" width="55" height="6" rx="3" fill="#111111" />
           <rect x="85" y="190" width="70" height="6" rx="3" fill="#FF5A3D" />
           <rect x="160" y="190" width="32" height="6" rx="3" fill="#FDCC42" />
           <rect x="95" y="204" width="80" height="6" rx="3" fill="#111111" opacity="0.4" />
-        </g>
+        </motion.g>
 
-        {/* Floating Design Tokens Pill Card (Right Top) */}
-        <g className="animate-subtle-float-delayed" style={{ animationDuration: "8s" }}>
+        {/* Floating Design Tokens Pill Card (Right Top) with spring float */}
+        <motion.g
+          animate={{ y: [0, 8, 0], rotate: [0, -1, 0] }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          whileHover={{ scale: 1.05, cursor: "pointer" }}
+        >
           <rect x="463" y="213" width="145" height="70" rx="14" fill="#111111" />
           <rect
             x="460"
@@ -113,10 +135,14 @@ export const HeroIllustration: React.FC = () => {
           <rect x="475" y="240" width="30" height="24" rx="6" fill="#FF5A3D" stroke="#111111" strokeWidth="1.5" />
           <rect x="512" y="240" width="30" height="24" rx="6" fill="#FDCC42" stroke="#111111" strokeWidth="1.5" />
           <rect x="549" y="240" width="30" height="24" rx="6" fill="#BD94F4" stroke="#111111" strokeWidth="1.5" />
-        </g>
+        </motion.g>
 
         {/* Floating Mastery Badge (Bottom Right) */}
-        <g className="animate-subtle-float" style={{ animationDuration: "9s" }}>
+        <motion.g
+          animate={{ y: [0, -6, 0] }}
+          transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+          whileHover={{ scale: 1.06 }}
+        >
           <rect x="443" y="383" width="150" height="52" rx="12" fill="#111111" />
           <rect
             x="440"
@@ -136,7 +162,7 @@ export const HeroIllustration: React.FC = () => {
           <text x="484" y="416" fill="#737373" fontSize="10" fontWeight="500" fontFamily="sans-serif">
             Production Ready
           </text>
-        </g>
+        </motion.g>
 
         {/* 3. ENVIRONMENT OBJECTS (Books, Succulent, Ottoman) */}
 
@@ -340,12 +366,12 @@ export const HeroIllustration: React.FC = () => {
           <path d="M404 447 C412 447, 412 458, 404 458" fill="none" stroke="#111111" strokeWidth="2" strokeLinecap="round" />
           {/* Mug badge */}
           <rect x="386" y="449" width="14" height="6" rx="2" fill="#FDCC42" />
-          {/* Steam squiggles */}
-          <path d="M388 436 Q391 430 388 424" stroke="#111111" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.6" />
-          <path d="M396 438 Q399 432 396 426" stroke="#111111" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.6" />
+          {/* Animated Steam squiggles */}
+          <path d="M388 436 Q391 430 388 424" stroke="#111111" strokeWidth="1.5" strokeLinecap="round" fill="none" className="animate-steam" />
+          <path d="M396 438 Q399 432 396 426" stroke="#111111" strokeWidth="1.5" strokeLinecap="round" fill="none" className="animate-steam" style={{ animationDelay: "0.8s" }} />
         </g>
       </svg>
-    </div>
+    </motion.div>
   );
 };
 

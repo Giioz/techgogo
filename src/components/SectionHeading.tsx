@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface SectionHeadingProps {
@@ -49,12 +50,24 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
       : "mt-3.5 text-base sm:text-lg text-tech-muted leading-relaxed font-medium";
 
   return (
-    <div className={`mb-8 sm:mb-12 ${align === "center" ? "text-center max-w-2xl mx-auto" : "max-w-3xl"}`}>
+    <motion.div
+      initial={{ opacity: 0, y: 38, scale: 0.96 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, amount: 0.5, margin: "0px 0px -80px 0px" }}
+      transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+      className={`mb-8 sm:mb-12 ${align === "center" ? "text-center max-w-2xl mx-auto" : "max-w-3xl"}`}
+    >
       {badge && (
-        <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold tracking-wide uppercase mb-3.5 ${badgeStyles[badgeAccent]}`}>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8, y: -6 }}
+          whileInView={{ opacity: 1, scale: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.45, type: "spring", stiffness: 400, damping: 20, delay: 0.05 }}
+          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold tracking-wide uppercase mb-3.5 ${badgeStyles[badgeAccent]}`}
+        >
           <span>✦</span>
           <span>{badge}</span>
-        </div>
+        </motion.div>
       )}
 
       <h2 className={`font-display font-bold ${titleSizeClass} tracking-tight text-tech-black`}>
@@ -72,7 +85,7 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
           {subtitle}
         </p>
       )}
-    </div>
+    </motion.div>
   );
 };
 
