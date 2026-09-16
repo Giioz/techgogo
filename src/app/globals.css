@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-lavender: #BEB0D2;
+  --surface-cream: #F7F7F5;
+  --text-dark: #111111;
+  --accent-orange: #FF5A3D;
+  --accent-yellow: #FDCC42;
+  --accent-purple: #BD94F4;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #BEB0D2;
+  color: #111111;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Custom Cursor Hiding on Desktop when Active */
+@media (hover: hover) and (pointer: fine) {
+  body.custom-cursor-active,
+  body.custom-cursor-active a,
+  body.custom-cursor-active button,
+  body.custom-cursor-active input,
+  body.custom-cursor-active [role="button"],
+  body.custom-cursor-active .tactile-btn,
+  body.custom-cursor-active .tactile-card {
+    cursor: none !important;
+  }
+}
+
+/* Comprehensive Georgian Typography Optimization */
+.lang-ka {
+  font-feature-settings: normal;
+  overflow-wrap: break-word;
+}
+
+.lang-ka h1,
+.lang-ka h2,
+.lang-ka h3,
+.lang-ka h4,
+.lang-ka .font-display {
+  font-family: "Noto Sans Georgian", "FiraGO", "BPG Nino Mtavruli", sans-serif;
+  letter-spacing: -0.012em;
+  font-feature-settings: "case" on;
+}
+
+.lang-ka p,
+.lang-ka span,
+.lang-ka button,
+.lang-ka input,
+.lang-ka a {
+  font-family: "Noto Sans Georgian", "FiraGO", "Plus Jakarta Sans", sans-serif;
+  letter-spacing: 0.005em;
+}
+
+/* Fine-tuned line-heights for Georgian characters */
+.lang-ka h1 {
+  line-height: 1.12;
+}
+
+.lang-ka h2 {
+  line-height: 1.18;
+}
+
+.lang-ka h3 {
+  line-height: 1.25;
+}
+
+.lang-ka p {
+  line-height: 1.6;
+}
+
+::selection {
+  background-color: #FDCC42;
+  color: #111111;
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #BEB0D2;
+}
+::-webkit-scrollbar-thumb {
+  background: #A897C0;
+  border-radius: 9999px;
+  border: 2px solid #BEB0D2;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9481B0;
+}
+
+/* Tactile button & card transitions */
+.tactile-btn {
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.tactile-btn:hover {
+  transform: translate(-1px, -2px);
+}
+.tactile-btn:active {
+  transform: translate(1px, 1px);
+}
+
+.tactile-card {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.tactile-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Subtle organic float for hero decorative accents */
+@keyframes subtle-float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(2deg);
+  }
+}
+
+.animate-subtle-float {
+  animation: subtle-float 6s ease-in-out infinite;
+}
+
+.animate-subtle-float-delayed {
+  animation: subtle-float 7s ease-in-out 1.5s infinite;
+}
