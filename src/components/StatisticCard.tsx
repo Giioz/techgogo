@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface StatisticCardProps {
@@ -46,11 +47,24 @@ export const StatisticCard: React.FC<StatisticCardProps> = ({
       : "text-3xl sm:text-4xl lg:text-[42px]";
 
   return (
-    <div className="tactile-card group relative bg-cream border-[1.5px] border-tech-black rounded-2xl sm:rounded-3xl p-4 sm:p-5 flex flex-col justify-between overflow-hidden shadow-tactile-sm hover:shadow-tactile transition-all duration-200">
+    <motion.div
+      variants={{
+        hidden: { opacity: 0, y: 18, scale: 0.96 },
+        visible: {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+        },
+      }}
+      whileHover={{ y: -4, scale: 1.02 }}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+      className="tactile-card group relative bg-cream border-[1.5px] border-tech-black rounded-2xl sm:rounded-3xl p-4 sm:p-5 flex flex-col justify-between overflow-hidden shadow-tactile-sm hover:shadow-tactile cursor-default"
+    >
       {/* Small top row with accent indicator */}
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-1.5">
-          <span className={`w-2.5 h-2.5 rounded-full ${style.dot} border border-tech-black/40`} />
+          <span className={`w-2.5 h-2.5 rounded-full ${style.dot} border border-tech-black/40 group-hover:scale-125 transition-transform`} />
           <span className="text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase text-tech-muted">
             TechGogo Stat
           </span>
@@ -64,7 +78,7 @@ export const StatisticCard: React.FC<StatisticCardProps> = ({
 
       {/* Main Stat Number */}
       <div className="my-1">
-        <span className={`font-display font-bold ${numberSizeClass} tracking-tight text-tech-black leading-none block group-hover:translate-x-0.5 transition-transform duration-150`}>
+        <span className={`font-display font-bold ${numberSizeClass} tracking-tight text-tech-black leading-none block group-hover:translate-x-1 group-hover:text-orangeAccent transition-all duration-200`}>
           {number}
         </span>
       </div>
@@ -73,7 +87,7 @@ export const StatisticCard: React.FC<StatisticCardProps> = ({
       <p className={labelSizeClass}>
         {label}
       </p>
-    </div>
+    </motion.div>
   );
 };
 

@@ -105,26 +105,90 @@ body {
   transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .tactile-btn:hover {
-  transform: translate(-1px, -2px);
+  transform: translate(-2px, -2px);
 }
 .tactile-btn:active {
   transform: translate(1px, 1px);
 }
 
 .tactile-card {
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .tactile-card:hover {
-  transform: translateY(-3px);
+  transform: translate(-2px, -4px);
 }
 
-/* Subtle organic float for hero decorative accents */
+/* Playful Neo-Brutalist Keyframe Animations */
 @keyframes subtle-float {
   0%, 100% {
     transform: translateY(0px) rotate(0deg);
   }
   50% {
-    transform: translateY(-6px) rotate(2deg);
+    transform: translateY(-8px) rotate(1.5deg);
+  }
+}
+
+@keyframes subtle-float-alt {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(-1.5deg);
+  }
+}
+
+@keyframes draw-path {
+  0% {
+    stroke-dashoffset: 220;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes twinkle {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.3) rotate(15deg);
+    opacity: 1;
+  }
+}
+
+@keyframes steam {
+  0% {
+    transform: translateY(0px) scaleX(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-4px) scaleX(1.2);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(0px) scaleX(1);
+    opacity: 0.6;
+  }
+}
+
+@keyframes equalizer-bounce {
+  0%, 100% {
+    transform: scaleY(0.4);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes soft-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.85;
   }
 }
 
@@ -133,5 +197,27 @@ body {
 }
 
 .animate-subtle-float-delayed {
-  animation: subtle-float 7s ease-in-out 1.5s infinite;
+  animation: subtle-float-alt 7s ease-in-out 1.5s infinite;
+}
+
+.animate-draw-path {
+  stroke-dasharray: 220;
+  stroke-dashoffset: 220;
+  animation: draw-path 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+}
+
+.animate-twinkle {
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+.animate-twinkle-delayed {
+  animation: twinkle 4s ease-in-out 1.2s infinite;
+}
+
+.animate-steam {
+  animation: steam 2.5s ease-in-out infinite;
+}
+
+.animate-soft-pulse {
+  animation: soft-pulse 2.5s ease-in-out infinite;
 }

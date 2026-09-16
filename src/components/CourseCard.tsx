@@ -2,15 +2,17 @@
 
 import React from "react";
 import { Star, Clock, BookOpen, ArrowUpRight } from "lucide-react";
+import { motion } from "framer-motion";
 import { Course } from "@/types";
 import CourseIllustration from "./CourseIllustration";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface CourseCardProps {
   course: Course;
+  index?: number;
 }
 
-export const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
+export const CourseCard: React.FC<CourseCardProps> = ({ course, index = 0 }) => {
   const { language, t } = useLanguage();
   const tr = t.courses[course.id];
 
@@ -32,14 +34,28 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
       : "text-xl sm:text-2xl leading-snug mb-3";
 
   return (
-    <div className="tactile-card group bg-cream border-[1.5px] border-tech-black rounded-3xl sm:rounded-4xl p-5 sm:p-6 flex flex-col justify-between shadow-tactile-sm hover:shadow-tactile transition-all duration-200 relative overflow-hidden">
+    <motion.div
+      initial={{ opacity: 0, y: 28, scale: 0.97 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: "-30px" }}
+      transition={{
+        duration: 0.55,
+        delay: (index % 3) * 0.1,
+        ease: [0.16, 1, 0.3, 1],
+      }}
+      whileHover={{ y: -6, scale: 1.012 }}
+      className="tactile-card group bg-cream border-[1.5px] border-tech-black rounded-3xl sm:rounded-4xl p-5 sm:p-6 flex flex-col justify-between shadow-tactile-sm hover:shadow-tactile-lg transition-all duration-200 relative overflow-hidden cursor-default"
+    >
       {/* TOP BADGE (IF PRESENT) */}
       {badge && (
         <div className="absolute top-8 right-8 z-10">
-          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-tech-black text-cream-pure text-[11px] font-bold tracking-wider uppercase border border-tech-black shadow-tactile-sm">
+          <motion.span
+            whileHover={{ scale: 1.08 }}
+            className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-tech-black text-cream-pure text-[11px] font-bold tracking-wider uppercase border border-tech-black shadow-tactile-sm"
+          >
             <span>✦</span>
             <span>{badge}</span>
-          </span>
+          </motion.span>
         </div>
       )}
 
@@ -89,15 +105,16 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
 
         {/* INSTRUCTOR ROW */}
         <div className="flex items-center gap-3 mb-5">
-          <div
-            className="w-9 h-9 rounded-xl border-[1.5px] border-tech-black flex items-center justify-center font-display font-extrabold text-xs text-tech-black shadow-tactile-sm flex-shrink-0"
+          <motion.div
+            whileHover={{ rotate: 10, scale: 1.1 }}
+            className="w-9 h-9 rounded-xl border-[1.5px] border-tech-black flex items-center justify-center font-display font-extrabold text-xs text-tech-black shadow-tactile-sm flex-shrink-0 cursor-default"
             style={{ backgroundColor: course.instructor.avatarBg }}
           >
             {course.instructor.name
               .split(" ")
               .map((n) => n[0])
               .join("")}
-          </div>
+          </motion.div>
           <div>
             <p className="text-xs font-bold text-tech-black leading-tight">
               {course.instructor.name}
@@ -122,12 +139,16 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
           )}
         </div>
 
-        <button className="tactile-btn inline-flex items-center gap-1 px-3.5 sm:px-4 py-2 rounded-full bg-cream border-[1.5px] border-tech-black font-bold text-xs text-tech-black shadow-tactile-sm hover:bg-orangeAccent hover:shadow-tactile group-hover:bg-orangeAccent transition-all whitespace-nowrap">
+        <motion.button
+          whileHover={{ scale: 1.05, y: -2 }}
+          whileTap={{ scale: 0.95 }}
+          className="tactile-btn inline-flex items-center gap-1 px-3.5 sm:px-4 py-2 rounded-full bg-cream border-[1.5px] border-tech-black font-bold text-xs text-tech-black shadow-tactile-sm hover:bg-orangeAccent hover:shadow-tactile group-hover:bg-orangeAccent transition-colors whitespace-nowrap"
+        >
           <span>{t.coursesSection.enrollNow}</span>
           <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
-        </button>
+        </motion.button>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { motion } from "framer-motion";
 
 interface CourseIllustrationProps {
   type: "code" | "design" | "ai" | "cloud" | "data" | "mobile";
@@ -23,11 +24,9 @@ export const CourseIllustration: React.FC<CourseIllustrationProps> = ({
     case "ai":
       return (
         <div
-          className="w-full h-44 rounded-2xl flex items-center justify-center relative overflow-hidden border-[1.5px] border-tech-black"
+          className="w-full h-44 rounded-2xl flex items-center justify-center relative overflow-hidden border-[1.5px] border-tech-black transition-colors"
           style={{ backgroundColor: currentBg }}
         >
-          {/* Subtle background circles */}
-          <circle cx="20" cy="20" r="40" fill="#FF5A3D" opacity="0.08" />
           <svg viewBox="0 0 280 160" fill="none" className="w-full h-full p-4">
             {/* Neural connections */}
             <line x1="60" y1="50" x2="140" y2="35" stroke="#111111" strokeWidth="2" strokeDasharray="4 4" />
@@ -37,21 +36,23 @@ export const CourseIllustration: React.FC<CourseIllustrationProps> = ({
             <line x1="140" y1="35" x2="220" y2="70" stroke="#111111" strokeWidth="2" />
             <line x1="140" y1="105" x2="220" y2="70" stroke="#111111" strokeWidth="2" />
 
-            {/* Input Nodes */}
-            <circle cx="60" cy="50" r="16" fill="#FDCC42" stroke="#111111" strokeWidth="2" />
-            <circle cx="60" cy="110" r="16" fill="#BD94F4" stroke="#111111" strokeWidth="2" />
+            {/* Input Nodes with subtle hover pulse */}
+            <circle cx="60" cy="50" r="16" fill="#FDCC42" stroke="#111111" strokeWidth="2" className="transition-transform group-hover:scale-110" style={{ transformOrigin: "60px 50px" }} />
+            <circle cx="60" cy="110" r="16" fill="#BD94F4" stroke="#111111" strokeWidth="2" className="transition-transform group-hover:scale-110" style={{ transformOrigin: "60px 110px" }} />
 
             {/* Hidden Nodes */}
-            <rect x="124" y="20" width="32" height="30" rx="8" fill="#FF5A3D" stroke="#111111" strokeWidth="2" />
-            <rect x="124" y="90" width="32" height="30" rx="8" fill="#FFFFFF" stroke="#111111" strokeWidth="2" />
+            <rect x="124" y="20" width="32" height="30" rx="8" fill="#FF5A3D" stroke="#111111" strokeWidth="2" className="transition-transform group-hover:-translate-y-1" />
+            <rect x="124" y="90" width="32" height="30" rx="8" fill="#FFFFFF" stroke="#111111" strokeWidth="2" className="transition-transform group-hover:translate-y-1" />
 
-            {/* Output Node (AI Brain / Spark) */}
-            <circle cx="220" cy="70" r="24" fill="#FF5A3D" stroke="#111111" strokeWidth="2" />
-            <path d="M220 58 Q220 70 210 70 Q220 70 220 82 Q220 70 230 70 Q220 70 220 58 Z" fill="#FFFFFF" />
+            {/* Output Node (AI Brain / Spark) with active rotation on hover */}
+            <g className="transition-transform duration-300 group-hover:scale-110" style={{ transformOrigin: "220px 70px" }}>
+              <circle cx="220" cy="70" r="24" fill="#FF5A3D" stroke="#111111" strokeWidth="2" />
+              <path d="M220 58 Q220 70 210 70 Q220 70 220 82 Q220 70 230 70 Q220 70 220 58 Z" fill="#FFFFFF" />
+            </g>
 
             {/* Micro decorative stars */}
-            <text x="35" y="30" fill="#FF5A3D" fontSize="14" fontWeight="bold">✦</text>
-            <text x="245" y="125" fill="#FDCC42" fontSize="16" fontWeight="bold">✦</text>
+            <text x="35" y="30" fill="#FF5A3D" fontSize="14" fontWeight="bold" className="animate-twinkle">✦</text>
+            <text x="245" y="125" fill="#FDCC42" fontSize="16" fontWeight="bold" className="animate-twinkle-delayed">✦</text>
           </svg>
         </div>
       );
@@ -79,9 +80,11 @@ export const CourseIllustration: React.FC<CourseIllustrationProps> = ({
             <rect x="132" y="92" width="40" height="7" rx="3.5" fill="#111111" opacity="0.6" />
             <rect x="52" y="108" width="35" height="7" rx="3.5" fill="#BD94F4" />
 
-            {/* Mini React / Go Badge floating */}
-            <circle cx="215" cy="115" r="18" fill="#FDCC42" stroke="#111111" strokeWidth="2" />
-            <text x="207" y="121" fill="#111111" fontSize="14" fontWeight="800">GO</text>
+            {/* Floating Go Badge with hover tilt */}
+            <g className="transition-transform duration-200 group-hover:rotate-12 group-hover:scale-110" style={{ transformOrigin: "215px 115px" }}>
+              <circle cx="215" cy="115" r="18" fill="#FDCC42" stroke="#111111" strokeWidth="2" />
+              <text x="207" y="121" fill="#111111" fontSize="14" fontWeight="800">GO</text>
+            </g>
           </svg>
         </div>
       );
@@ -101,10 +104,10 @@ export const CourseIllustration: React.FC<CourseIllustrationProps> = ({
             <line x1="140" y1="25" x2="140" y2="135" stroke="#BD94F4" strokeWidth="1.5" strokeDasharray="3 3" />
             <line x1="195" y1="25" x2="195" y2="135" stroke="#BD94F4" strokeWidth="1.5" strokeDasharray="3 3" />
 
-            {/* Floating Swatch Palette */}
-            <rect x="55" y="45" width="40" height="40" rx="10" fill="#FF5A3D" stroke="#111111" strokeWidth="2" />
-            <rect x="110" y="45" width="40" height="40" rx="10" fill="#FDCC42" stroke="#111111" strokeWidth="2" />
-            <rect x="165" y="45" width="40" height="40" rx="10" fill="#BD94F4" stroke="#111111" strokeWidth="2" />
+            {/* Floating Swatch Palette with staggered hover lift */}
+            <rect x="55" y="45" width="40" height="40" rx="10" fill="#FF5A3D" stroke="#111111" strokeWidth="2" className="transition-transform duration-200 group-hover:-translate-y-1.5" />
+            <rect x="110" y="45" width="40" height="40" rx="10" fill="#FDCC42" stroke="#111111" strokeWidth="2" className="transition-transform duration-200 group-hover:-translate-y-2.5" />
+            <rect x="165" y="45" width="40" height="40" rx="10" fill="#BD94F4" stroke="#111111" strokeWidth="2" className="transition-transform duration-200 group-hover:-translate-y-1.5" />
 
             {/* Pen Tool Vector Handle */}
             <path d="M70 110 C120 75, 160 145, 210 100" stroke="#111111" strokeWidth="2.5" fill="none" />
@@ -127,14 +130,18 @@ export const CourseIllustration: React.FC<CourseIllustrationProps> = ({
               fill="#FFFFFF"
               stroke="#111111"
               strokeWidth="2.5"
+              className="transition-transform group-hover:scale-102"
+              style={{ transformOrigin: "135px 80px" }}
             />
             {/* Container boxes inside cloud */}
-            <rect x="95" y="70" width="26" height="26" rx="6" fill="#FF5A3D" stroke="#111111" strokeWidth="2" />
-            <rect x="130" y="70" width="26" height="26" rx="6" fill="#FDCC42" stroke="#111111" strokeWidth="2" />
-            <rect x="165" y="70" width="26" height="26" rx="6" fill="#BD94F4" stroke="#111111" strokeWidth="2" />
+            <rect x="95" y="70" width="26" height="26" rx="6" fill="#FF5A3D" stroke="#111111" strokeWidth="2" className="transition-transform group-hover:-translate-y-1" />
+            <rect x="130" y="70" width="26" height="26" rx="6" fill="#FDCC42" stroke="#111111" strokeWidth="2" className="transition-transform group-hover:-translate-y-2" />
+            <rect x="165" y="70" width="26" height="26" rx="6" fill="#BD94F4" stroke="#111111" strokeWidth="2" className="transition-transform group-hover:-translate-y-1" />
 
-            {/* Sync arrows */}
-            <path d="M125 110 L140 110 L140 116 L150 106 L140 96 L140 102 L125 102 Z" fill="#111111" />
+            {/* Sync arrows with subtle spin */}
+            <g className="transition-transform duration-500 group-hover:rotate-180" style={{ transformOrigin: "137px 106px" }}>
+              <path d="M125 110 L140 110 L140 116 L150 106 L140 96 L140 102 L125 102 Z" fill="#111111" />
+            </g>
           </svg>
         </div>
       );
@@ -153,11 +160,13 @@ export const CourseIllustration: React.FC<CourseIllustrationProps> = ({
               <path d="M50 80 L50 110 C50 118, 110 118, 110 110 L110 80" fill="#FDCC42" stroke="#111111" strokeWidth="2" />
             </g>
 
-            {/* Streaming Bars / Wave */}
-            <rect x="135" y="90" width="16" height="35" rx="4" fill="#FF5A3D" stroke="#111111" strokeWidth="1.8" />
-            <rect x="160" y="65" width="16" height="60" rx="4" fill="#BD94F4" stroke="#111111" strokeWidth="1.8" />
-            <rect x="185" y="45" width="16" height="80" rx="4" fill="#111111" stroke="#111111" strokeWidth="1.8" />
-            <rect x="210" y="80" width="16" height="45" rx="4" fill="#FDCC42" stroke="#111111" strokeWidth="1.8" />
+            {/* Animated Equalizer Streaming Bars (Hook) */}
+            <g>
+              <rect x="135" y="85" width="16" height="40" rx="4" fill="#FF5A3D" stroke="#111111" strokeWidth="1.8" className="transition-all duration-300 group-hover:h-14 group-hover:y-70" />
+              <rect x="160" y="60" width="16" height="65" rx="4" fill="#BD94F4" stroke="#111111" strokeWidth="1.8" className="transition-all duration-300 group-hover:h-20 group-hover:y-45" />
+              <rect x="185" y="40" width="16" height="85" rx="4" fill="#111111" stroke="#111111" strokeWidth="1.8" className="transition-all duration-300 group-hover:h-16 group-hover:y-60" />
+              <rect x="210" y="75" width="16" height="50" rx="4" fill="#FDCC42" stroke="#111111" strokeWidth="1.8" className="transition-all duration-300 group-hover:h-24 group-hover:y-35" />
+            </g>
 
             {/* Sparkline curve */}
             <path d="M125 105 Q155 45 185 30 T235 60" fill="none" stroke="#FF5A3D" strokeWidth="2.5" strokeLinecap="round" />
@@ -173,18 +182,20 @@ export const CourseIllustration: React.FC<CourseIllustrationProps> = ({
           style={{ backgroundColor: currentBg }}
         >
           <svg viewBox="0 0 280 160" fill="none" className="w-full h-full p-4">
-            {/* Creative Canvas / Geometry */}
-            <circle cx="140" cy="80" r="50" fill="#BD94F4" stroke="#111111" strokeWidth="2" />
-            <circle cx="140" cy="80" r="32" fill="#FFFFFF" stroke="#111111" strokeWidth="1.5" />
-            <circle cx="140" cy="80" r="14" fill="#FDCC42" stroke="#111111" strokeWidth="2" />
+            {/* Creative Canvas / Geometry with smooth rotation on hover */}
+            <g className="transition-transform duration-700 group-hover:rotate-45" style={{ transformOrigin: "140px 80px" }}>
+              <circle cx="140" cy="80" r="50" fill="#BD94F4" stroke="#111111" strokeWidth="2" />
+              <circle cx="140" cy="80" r="32" fill="#FFFFFF" stroke="#111111" strokeWidth="1.5" />
+              <circle cx="140" cy="80" r="14" fill="#FDCC42" stroke="#111111" strokeWidth="2" />
 
-            {/* Radial Geometry Lines */}
-            <line x1="80" y1="80" x2="200" y2="80" stroke="#111111" strokeWidth="1.5" strokeDasharray="4 3" />
-            <line x1="140" y1="20" x2="140" y2="140" stroke="#111111" strokeWidth="1.5" strokeDasharray="4 3" />
+              {/* Radial Geometry Lines */}
+              <line x1="80" y1="80" x2="200" y2="80" stroke="#111111" strokeWidth="1.5" strokeDasharray="4 3" />
+              <line x1="140" y1="20" x2="140" y2="140" stroke="#111111" strokeWidth="1.5" strokeDasharray="4 3" />
+            </g>
 
-            {/* Corner floating shapes */}
-            <rect x="45" y="30" width="22" height="22" rx="6" fill="#FF5A3D" stroke="#111111" strokeWidth="1.8" transform="rotate(15 45 30)" />
-            <rect x="210" y="100" width="24" height="24" rx="6" fill="#FDCC42" stroke="#111111" strokeWidth="1.8" transform="rotate(-15 210 100)" />
+            {/* Corner floating shapes with micro-tilt */}
+            <rect x="45" y="30" width="22" height="22" rx="6" fill="#FF5A3D" stroke="#111111" strokeWidth="1.8" transform="rotate(15 45 30)" className="transition-transform group-hover:scale-115" />
+            <rect x="210" y="100" width="24" height="24" rx="6" fill="#FDCC42" stroke="#111111" strokeWidth="1.8" transform="rotate(-15 210 100)" className="transition-transform group-hover:scale-115" />
           </svg>
         </div>
       );

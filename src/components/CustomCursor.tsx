@@ -3,12 +3,24 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 
+interface Particle {
+  id: number;
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  color: string;
+  char: string;
+  size: number;
+}
+
 export const CustomCursor: React.FC = () => {
   const { language } = useLanguage();
   const [enabled, setEnabled] = useState(false);
   const [visible, setVisible] = useState(false);
   const [hoverType, setHoverType] = useState<"default" | "button" | "card" | "pill" | "text">("default");
   const [isClicking, setIsClicking] = useState(false);
+  const [particles, setParticles] = useState<Particle[]>([]);
 
   // Positions
   const mousePos = useRef({ x: -100, y: -100 });
@@ -52,7 +64,36 @@ export const CustomCursor: React.FC = () => {
       }
     };
 
-    const onMouseDown = () => setIsClicking(true);
+    const colors = ["#FF5A3D", "#FDCC42", "#BD94F4", "#111111"];
+    const chars = ["✦", "★", "✦", "•"];
+
+    const onMouseDown = (e: MouseEvent) => {
+      setIsClicking(true);
+
+      // Spawn 4 micro doodle particles on click (Hook)
+      const newParticles: Particle[] = Array.from({ length: 4 }).map((_, i) => {
+        const angle = (i * Math.PI) / 2 + (Math.random() - 0.5) * 0.5;
+        const speed = 2.5 + Math.random() * 2;
+        return {
+          id: Date.now() + i,
+          x: e.clientX,
+          y: e.clientY,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          color: colors[i % colors.length],
+          char: chars[i % chars.length],
+          size: 11 + Math.random() * 4,
+        };
+      });
+
+      setParticles((prev) => [...prev, ...newParticles]);
+
+      // Remove after animation completes
+      setTimeout(() => {
+        setParticles((prev) => prev.filter((p) => !newParticles.some((np) => np.id === p.id)));
+      }, 550);
+    };
+
     const onMouseUp = () => setIsClicking(false);
     const onMouseLeave = () => setVisible(false);
     const onMouseEnter = () => setVisible(true);
@@ -70,8 +111,8 @@ export const CustomCursor: React.FC = () => {
       cursorDotPos.current.x = mousePos.current.x;
       cursorDotPos.current.y = mousePos.current.y;
 
-      // Follower lags slightly with spring ease
-      const ease = 0.18;
+      // Follower lags slightly with snappy spring ease
+      const ease = 0.22;
       cursorFollowerPos.current.x += (mousePos.current.x - cursorFollowerPos.current.x) * ease;
       cursorFollowerPos.current.y += (mousePos.current.y - cursorFollowerPos.current.y) * ease;
 
@@ -124,6 +165,23 @@ export const CustomCursor: React.FC = () => {
       }`}
       aria-hidden="true"
     >
+      {/* CLICK PARTICLE BURST (✦ SPARKLES) */}
+      {particles.map((p) => (
+        <div
+          key={p.id}
+          className="fixed top-0 left-0 pointer-events-none font-bold select-none"
+          style={{
+            transform: `translate3d(${p.x + p.vx * 12}px, ${p.y + p.vy * 12}px, 0)`,
+            color: p.color,
+            fontSize: `${p.size}px`,
+            transition: "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease-out",
+            opacity: 0.9,
+          }}
+        >
+          {p.char}
+        </div>
+      ))}
+
       {/* OUTER TACTILE FOLLOWER */}
       <div
         ref={followerRef}
@@ -141,7 +199,7 @@ export const CustomCursor: React.FC = () => {
               ? "w-8 h-8 bg-purpleAccent text-tech-black shadow-tactile-sm scale-110"
               : hoverType === "text"
               ? "w-9 h-9 -ml-0.5 -mt-0.5 bg-yellowAccent/80 border-tech-black scale-95"
-              : "w-8 h-8 bg-cream/70 backdrop-blur-[1px] shadow-sm scale-100"
+              : "w-8 h-8 bg-cream/75 backdrop-blur-[1px] shadow-sm scale-100"
           }`}
         >
           {badgeContent && (

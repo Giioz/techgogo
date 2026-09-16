@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Sparkles, BrainCircuit, Code2, Palette, Cloud, Database } from "lucide-react";
+import { motion } from "framer-motion";
 import { SUBJECTS } from "@/data/subjects";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -35,17 +36,26 @@ export const SubjectPills: React.FC<SubjectPillsProps> = ({
   };
 
   return (
-    <div className="w-full flex items-center gap-2.5 sm:gap-3 overflow-x-auto pb-4 pt-1 no-scrollbar select-none">
-      {SUBJECTS.map((subject) => {
+    <motion.div
+      initial={{ opacity: 0, y: 14 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      className="w-full flex items-center gap-2.5 sm:gap-3 overflow-x-auto pb-4 pt-1 no-scrollbar select-none"
+    >
+      {SUBJECTS.map((subject, idx) => {
         const isSelected = selectedSubject === subject.id;
         const translatedSubject = t.subjects.find((s) => s.id === subject.id);
         const displayName = translatedSubject ? translatedSubject.name : subject.name;
 
         return (
-          <button
+          <motion.button
             key={subject.id}
             onClick={() => onSelectSubject(subject.id)}
-            className={`tactile-btn flex-shrink-0 inline-flex items-center gap-2.5 px-4 sm:px-5 py-2.5 rounded-full border-[1.5px] border-tech-black font-semibold text-xs sm:text-sm transition-all duration-150 ${
+            whileHover={{ y: -3, scale: 1.02 }}
+            whileTap={{ scale: 0.94 }}
+            transition={{ type: "spring", stiffness: 450, damping: 25 }}
+            className={`tactile-btn flex-shrink-0 inline-flex items-center gap-2.5 px-4 sm:px-5 py-2.5 rounded-full border-[1.5px] border-tech-black font-semibold text-xs sm:text-sm transition-colors duration-150 ${
               isSelected
                 ? "bg-tech-black text-cream-pure shadow-tactile"
                 : "bg-cream text-tech-black hover:bg-white shadow-tactile-sm"
@@ -66,18 +76,18 @@ export const SubjectPills: React.FC<SubjectPillsProps> = ({
             </span>
             <span>{displayName}</span>
             <span
-              className={`text-[11px] px-1.5 py-0.5 rounded-full font-bold ${
+              className={`text-[11px] px-1.5 py-0.5 rounded-full font-bold transition-transform duration-200 ${
                 isSelected
-                  ? "bg-white/20 text-cream-pure"
+                  ? "bg-white/20 text-cream-pure scale-110"
                   : "bg-tech-black/5 text-tech-muted"
               }`}
             >
               {subject.coursesCount}
             </span>
-          </button>
+          </motion.button>
         );
       })}
-    </div>
+    </motion.div>
   );
 };
 
