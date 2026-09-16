@@ -51,18 +51,18 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      initial={{ opacity: 0, y: 38, scale: 0.96 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, amount: 0.5, margin: "0px 0px -80px 0px" }}
+      transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
       className={`mb-8 sm:mb-12 ${align === "center" ? "text-center max-w-2xl mx-auto" : "max-w-3xl"}`}
     >
       {badge && (
         <motion.div
-          initial={{ opacity: 0, scale: 0.85 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, scale: 0.8, y: -6 }}
+          whileInView={{ opacity: 1, scale: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.45, type: "spring", stiffness: 400, damping: 20 }}
+          transition={{ duration: 0.45, type: "spring", stiffness: 400, damping: 20, delay: 0.05 }}
           className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold tracking-wide uppercase mb-3.5 ${badgeStyles[badgeAccent]}`}
         >
           <span>✦</span>

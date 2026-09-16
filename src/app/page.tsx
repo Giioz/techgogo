@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Hero from "@/components/Hero";
 import SectionHeading from "@/components/SectionHeading";
 import SubjectPills from "@/components/SubjectPills";
@@ -16,6 +16,19 @@ import { LanguageProvider, useLanguage } from "@/context/LanguageContext";
 function HomePageContent() {
   const [selectedSubject, setSelectedSubject] = useState<string>("all");
   const { t } = useLanguage();
+
+  // Prevent browser scroll restoration jitter on refresh
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      if ("scrollRestoration" in window.history) {
+        window.history.scrollRestoration = "manual";
+      }
+      // If no explicit deep hash, stay at top on refresh
+      if (!window.location.hash && window.scrollY < 80) {
+        window.scrollTo(0, 0);
+      }
+    }
+  }, []);
 
   const filteredCourses = COURSES.filter((course) => {
     if (selectedSubject === "all") return true;
@@ -50,7 +63,7 @@ function HomePageContent() {
 
           <a
             href="#all-courses"
-            className="group hidden md:inline-flex items-center gap-2 px-5 py-3 rounded-full bg-cream border-[1.5px] border-tech-black text-xs font-bold text-tech-black shadow-tactile-sm hover:shadow-tactile transition-all mb-8"
+            className="group hidden md:inline-flex items-center gap-2 px-5 py-3 rounded-full bg-cream border-[1.5px] border-tech-black text-xs font-bold text-tech-black shadow-tactile-sm hover:shadow-tactile transition-all mb-8 cursor-pointer"
           >
             <span>{t.coursesSection.viewAll}</span>
             <span className="group-hover:translate-x-1 transition-transform">→</span>
@@ -65,10 +78,10 @@ function HomePageContent() {
           />
         </div>
 
-        {/* DISTINCTIVE COURSE CARDS GRID */}
+        {/* DISTINCTIVE COURSE CARDS GRID WITH STAGGERED INDEX */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
-          {filteredCourses.map((course) => (
-            <CourseCard key={course.id} course={course} />
+          {filteredCourses.map((course, idx) => (
+            <CourseCard key={course.id} course={course} index={idx} />
           ))}
         </div>
 

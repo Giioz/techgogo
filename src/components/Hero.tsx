@@ -21,13 +21,21 @@ export const Hero: React.FC = () => {
       ? "text-sm sm:text-lg text-tech-black/80 font-medium max-w-xl leading-relaxed mb-7 sm:mb-9"
       : "text-base sm:text-xl text-tech-black/80 font-medium max-w-xl leading-relaxed mb-7 sm:mb-9";
 
+  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault();
+    const target = document.getElementById(id);
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-3 sm:pt-6 pb-8">
-      {/* MAIN CREAM ROUNDED HERO PANEL AGAINST LAVENDER BACKGROUND */}
+      {/* MAIN CREAM ROUNDED HERO PANEL - ZERO Y-TRANSLATION TO PREVENT REFRESH SCROLL DRIFT */}
       <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
         className="bg-cream border-[1.5px] border-tech-black rounded-3xl sm:rounded-4xl lg:rounded-[36px] overflow-hidden relative shadow-tactile-sm"
       >
         {/* INTEGRATED NAVBAR */}
@@ -41,9 +49,9 @@ export const Hero: React.FC = () => {
             <div className="lg:col-span-6 flex flex-col justify-center text-left z-10">
               {/* Playful Kicker / Eyebrow with Spring Pop */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.8, y: -10 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ duration: 0.5, type: "spring", stiffness: 400, damping: 20, delay: 0.1 }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, type: "spring", stiffness: 400, damping: 20, delay: 0.05 }}
                 className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-yellowAccent/30 border-[1.5px] border-tech-black w-fit mb-4 sm:mb-6 shadow-tactile-sm"
               >
                 <span className="text-xs">✦</span>
@@ -54,9 +62,9 @@ export const Hero: React.FC = () => {
 
               {/* OVERSIZED ROUNDED HEADLINE WITH DYNAMIC DRAWING SQUIGGLE */}
               <motion.h1
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+                transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
                 className={`font-display font-extrabold ${titleSizeClass} tracking-tight text-tech-black mb-5 sm:mb-7`}
               >
                 {t.hero.titlePart1}
@@ -77,7 +85,7 @@ export const Hero: React.FC = () => {
                       strokeLinecap="round"
                       initial={{ pathLength: 0 }}
                       animate={{ pathLength: 1 }}
-                      transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
+                      transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.45 }}
                     />
                   </svg>
                 </span>{" "}
@@ -86,9 +94,9 @@ export const Hero: React.FC = () => {
 
               {/* DESCRIPTION */}
               <motion.p
-                initial={{ opacity: 0, y: 14 }}
+                initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+                transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
                 className={subtitleSizeClass}
               >
                 {t.hero.subtitle}
@@ -96,17 +104,18 @@ export const Hero: React.FC = () => {
 
               {/* ACTION BUTTONS & SEARCH EXPLORER */}
               <motion.div
-                initial={{ opacity: 0, y: 14 }}
+                initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1], delay: 0.38 }}
+                transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1], delay: 0.32 }}
                 className="flex flex-wrap items-center gap-4 sm:gap-6 mb-8"
               >
-                {/* Primary CTA: Find a course (Orange) with tactile spring */}
+                {/* Primary CTA: Find a course (Orange) with smooth in-page scroll */}
                 <motion.a
                   href="#courses"
+                  onClick={(e) => handleSmoothScroll(e, "courses")}
                   whileHover={{ scale: 1.03, y: -2 }}
                   whileTap={{ scale: 0.97, y: 1 }}
-                  className="tactile-btn inline-flex items-center justify-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-orangeAccent text-tech-black font-extrabold text-sm sm:text-base tracking-wide border-[1.5px] border-tech-black shadow-tactile hover:shadow-tactile-lg transition-shadow"
+                  className="tactile-btn inline-flex items-center justify-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-orangeAccent text-tech-black font-extrabold text-sm sm:text-base tracking-wide border-[1.5px] border-tech-black shadow-tactile hover:shadow-tactile-lg transition-shadow cursor-pointer"
                 >
                   <span>{t.hero.ctaPrimary}</span>
                   <ArrowRight className="w-4 h-4 stroke-[2.5]" />
@@ -115,8 +124,9 @@ export const Hero: React.FC = () => {
                 {/* Secondary Action: Explore courses → */}
                 <motion.a
                   href="#subjects"
+                  onClick={(e) => handleSmoothScroll(e, "subjects")}
                   whileHover={{ x: 4 }}
-                  className="group inline-flex items-center gap-2 text-sm sm:text-base font-bold text-tech-black hover:text-orangeAccent transition-colors py-2 px-1"
+                  className="group inline-flex items-center gap-2 text-sm sm:text-base font-bold text-tech-black hover:text-orangeAccent transition-colors py-2 px-1 cursor-pointer"
                 >
                   <span>{t.hero.ctaSecondary}</span>
                   <span className="inline-block transform group-hover:translate-x-1.5 transition-transform duration-200">
@@ -129,25 +139,25 @@ export const Hero: React.FC = () => {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.48 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
                 className="flex items-center gap-3 pt-2 border-t border-tech-black/10"
               >
                 <div className="flex -space-x-2">
                   <motion.div
                     whileHover={{ scale: 1.2, zIndex: 10 }}
-                    className="w-8 h-8 rounded-full bg-orangeAccent border-[1.5px] border-tech-black flex items-center justify-center text-xs font-bold text-tech-black transition-transform"
+                    className="w-8 h-8 rounded-full bg-orangeAccent border-[1.5px] border-tech-black flex items-center justify-center text-xs font-bold text-tech-black transition-transform cursor-default"
                   >
                     ✦
                   </motion.div>
                   <motion.div
                     whileHover={{ scale: 1.2, zIndex: 10 }}
-                    className="w-8 h-8 rounded-full bg-yellowAccent border-[1.5px] border-tech-black flex items-center justify-center text-xs font-bold text-tech-black transition-transform"
+                    className="w-8 h-8 rounded-full bg-yellowAccent border-[1.5px] border-tech-black flex items-center justify-center text-xs font-bold text-tech-black transition-transform cursor-default"
                   >
                     ★
                   </motion.div>
                   <motion.div
                     whileHover={{ scale: 1.2, zIndex: 10 }}
-                    className="w-8 h-8 rounded-full bg-purpleAccent border-[1.5px] border-tech-black flex items-center justify-center text-xs font-bold text-tech-black transition-transform"
+                    className="w-8 h-8 rounded-full bg-purpleAccent border-[1.5px] border-tech-black flex items-center justify-center text-xs font-bold text-tech-black transition-transform cursor-default"
                   >
                     ✓
                   </motion.div>
@@ -164,21 +174,9 @@ export const Hero: React.FC = () => {
             </div>
           </div>
 
-          {/* HERO STATISTICS: THREE SMALL EDITORIAL STATISTIC CARDS WITH STAGGERED REVEAL */}
+          {/* HERO STATISTICS: THREE SMALL EDITORIAL STATISTIC CARDS */}
           <div className="mt-10 sm:mt-14 pt-8 sm:pt-10 border-t-[1.5px] border-tech-black/15">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-20px" }}
-              variants={{
-                hidden: { opacity: 0 },
-                visible: {
-                  opacity: 1,
-                  transition: { staggerChildren: 0.12, delayChildren: 0.1 },
-                },
-              }}
-              className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-5"
-            >
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-5">
               <StatisticCard
                 number={t.hero.stat1Number}
                 label={t.hero.stat1Label}
@@ -197,7 +195,7 @@ export const Hero: React.FC = () => {
                 accent="orange"
                 tag={t.hero.stat3Tag}
               />
-            </motion.div>
+            </div>
           </div>
         </div>
       </motion.div>
