@@ -1,0 +1,134 @@
+"use client";
+
+import React from "react";
+import { Star, Clock, BookOpen, ArrowUpRight } from "lucide-react";
+import { Course } from "@/types";
+import CourseIllustration from "./CourseIllustration";
+import { useLanguage } from "@/context/LanguageContext";
+
+interface CourseCardProps {
+  course: Course;
+}
+
+export const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
+  const { language, t } = useLanguage();
+  const tr = t.courses[course.id];
+
+  const categoryBadgeStyles = {
+    orange: "bg-orangeAccent/15 text-[#D43719] border-orangeAccent/30",
+    yellow: "bg-yellowAccent/25 text-[#7E5700] border-yellowAccent/40",
+    purple: "bg-purpleAccent/25 text-[#54219A] border-purpleAccent/40",
+  };
+
+  const title = tr?.title || course.title;
+  const category = tr?.category || course.category;
+  const instructorRole = tr?.instructorRole || course.instructor.role;
+  const duration = tr?.duration || course.duration;
+  const badge = tr?.badge || course.badge;
+
+  const titleSizeClass =
+    language === "ka"
+      ? "text-lg sm:text-[21px] leading-[1.32] mb-3"
+      : "text-xl sm:text-2xl leading-snug mb-3";
+
+  return (
+    <div className="tactile-card group bg-cream border-[1.5px] border-tech-black rounded-3xl sm:rounded-4xl p-5 sm:p-6 flex flex-col justify-between shadow-tactile-sm hover:shadow-tactile transition-all duration-200 relative overflow-hidden">
+      {/* TOP BADGE (IF PRESENT) */}
+      {badge && (
+        <div className="absolute top-8 right-8 z-10">
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-tech-black text-cream-pure text-[11px] font-bold tracking-wider uppercase border border-tech-black shadow-tactile-sm">
+            <span>✦</span>
+            <span>{badge}</span>
+          </span>
+        </div>
+      )}
+
+      <div>
+        {/* GRAPHIC ILLUSTRATION */}
+        <div className="mb-5 overflow-hidden rounded-2xl">
+          <CourseIllustration
+            type={course.illustrationType}
+            categoryColor={course.categoryColor}
+          />
+        </div>
+
+        {/* CATEGORY LABEL */}
+        <div className="mb-2.5">
+          <span
+            className={`inline-block px-3 py-0.5 rounded-full text-[11px] sm:text-xs font-bold tracking-wide border ${
+              categoryBadgeStyles[course.categoryColor]
+            }`}
+          >
+            {category}
+          </span>
+        </div>
+
+        {/* COURSE TITLE */}
+        <h3 className={`font-display font-bold ${titleSizeClass} text-tech-black tracking-tight group-hover:text-orangeAccent transition-colors`}>
+          {title}
+        </h3>
+
+        {/* SHORT METADATA (Duration, Lessons, Rating) */}
+        <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 text-xs font-semibold text-tech-muted mb-4 pb-4 border-b border-tech-black/10">
+          <div className="flex items-center gap-1 text-tech-black">
+            <Star className="w-3.5 h-3.5 fill-yellowAccent text-[#C99E25]" />
+            <span className="font-bold">{course.rating}</span>
+            <span className="text-tech-muted">({course.reviewsCount})</span>
+          </div>
+          <span className="text-tech-black/30">•</span>
+          <div className="flex items-center gap-1">
+            <Clock className="w-3.5 h-3.5 text-tech-muted" />
+            <span>{duration}</span>
+          </div>
+          <span className="text-tech-black/30">•</span>
+          <div className="flex items-center gap-1">
+            <BookOpen className="w-3.5 h-3.5 text-tech-muted" />
+            <span>{course.lessons} {t.coursesSection.lessonsSuffix}</span>
+          </div>
+        </div>
+
+        {/* INSTRUCTOR ROW */}
+        <div className="flex items-center gap-3 mb-5">
+          <div
+            className="w-9 h-9 rounded-xl border-[1.5px] border-tech-black flex items-center justify-center font-display font-extrabold text-xs text-tech-black shadow-tactile-sm flex-shrink-0"
+            style={{ backgroundColor: course.instructor.avatarBg }}
+          >
+            {course.instructor.name
+              .split(" ")
+              .map((n) => n[0])
+              .join("")}
+          </div>
+          <div>
+            <p className="text-xs font-bold text-tech-black leading-tight">
+              {course.instructor.name}
+            </p>
+            <p className="text-[11px] font-medium text-tech-muted leading-tight mt-0.5">
+              {instructorRole}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* BOTTOM ACTION & PRICE ROW */}
+      <div className="pt-4 border-t border-tech-black/10 flex items-center justify-between mt-auto">
+        <div className="flex items-baseline gap-1.5">
+          <span className="font-display font-extrabold text-2xl text-tech-black">
+            {course.price}
+          </span>
+          {course.originalPrice && (
+            <span className="text-xs font-semibold text-tech-muted line-through">
+              {course.originalPrice}
+            </span>
+          )}
+        </div>
+
+        <button className="tactile-btn inline-flex items-center gap-1 px-3.5 sm:px-4 py-2 rounded-full bg-cream border-[1.5px] border-tech-black font-bold text-xs text-tech-black shadow-tactile-sm hover:bg-orangeAccent hover:shadow-tactile group-hover:bg-orangeAccent transition-all whitespace-nowrap">
+          <span>{t.coursesSection.enrollNow}</span>
+          <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default CourseCard;
