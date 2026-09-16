@@ -17,13 +17,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import PageHeader from "@/components/PageHeader";
 import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
-import { TECHGOGO_SERVICES } from "@/data/servicesData";
+import { TECHGOGO_SERVICES, getLocalizedService } from "@/data/servicesData";
 import { PARTNER_LOGOS } from "@/data/aboutData";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function ServicesPage() {
   const { language } = useLanguage();
   const isKa = language === "ka";
+  const services = React.useMemo(
+    () => TECHGOGO_SERVICES.map((s) => getLocalizedService(s, language)),
+    [language]
+  );
 
   // Multi-step RFP Form state
   const [rfpStep, setRfpStep] = useState(1);
@@ -136,7 +140,7 @@ export default function ServicesPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-          {TECHGOGO_SERVICES.map((s) => (
+          {services.map((s) => (
             <div
               key={s.id}
               className="tactile-card bg-cream border-[1.5px] border-tech-black rounded-3xl sm:rounded-4xl p-7 sm:p-8 flex flex-col justify-between shadow-tactile-sm hover:shadow-tactile-lg transition-all"
@@ -343,7 +347,7 @@ export default function ServicesPage() {
                     {isKa ? "ნაბიჯი 1: რომელი სერვისები გაინტერესებთ?" : "Step 1: What services do you need?"}
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {TECHGOGO_SERVICES.map((s) => {
+                    {services.map((s) => {
                       const isSelected = selectedServices.includes(s.slug);
                       return (
                         <div
@@ -391,7 +395,7 @@ export default function ServicesPage() {
                     {isKa ? "ნაბიჯი 2: რა კონკრეტული შედეგები გჭირდებათ?" : "Step 2: Specific deliverables needed"}
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    {TECHGOGO_SERVICES.filter((s) => selectedServices.includes(s.slug))
+                    {services.filter((s) => selectedServices.includes(s.slug))
                       .flatMap((s) => s.checklistItems)
                       .map((item, idx) => {
                         const isChecked = selectedDeliverables.includes(item);

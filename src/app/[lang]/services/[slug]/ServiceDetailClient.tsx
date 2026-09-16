@@ -8,7 +8,7 @@ import PageHeader from "@/components/PageHeader";
 import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
 import { Service } from "@/types";
-import { TECHGOGO_SERVICES } from "@/data/servicesData";
+import { TECHGOGO_SERVICES, getLocalizedService } from "@/data/servicesData";
 import { PARTNER_LOGOS } from "@/data/aboutData";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -17,9 +17,10 @@ interface ServiceDetailClientProps {
   lang: string;
 }
 
-export default function ServiceDetailClient({ service, lang }: ServiceDetailClientProps) {
+export default function ServiceDetailClient({ service: initialService, lang }: ServiceDetailClientProps) {
   const { language } = useLanguage();
   const isKa = language === "ka";
+  const service = getLocalizedService(initialService, language);
 
   const [contactData, setContactData] = useState({
     name: "",
@@ -31,7 +32,9 @@ export default function ServiceDetailClient({ service, lang }: ServiceDetailClie
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const relatedServices = TECHGOGO_SERVICES.filter((s) => s.slug !== service.slug);
+  const relatedServices = TECHGOGO_SERVICES.filter((s) => s.slug !== service.slug).map((s) =>
+    getLocalizedService(s, language)
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

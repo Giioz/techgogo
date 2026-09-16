@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import PageHeader from "@/components/PageHeader";
 import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
-import { TECHGOGO_ARTICLES } from "@/data/articlesData";
+import { TECHGOGO_ARTICLES, getLocalizedArticle } from "@/data/articlesData";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function NewsPage() {
@@ -24,17 +24,22 @@ export default function NewsPage() {
     { id: "impact", labelKa: "განათლება & გავლენა", labelEn: "Education & Impact" },
   ];
 
-  const filteredArticles = useMemo(() => {
-    if (selectedCategory === "all") return TECHGOGO_ARTICLES;
-    if (selectedCategory === "awards") return TECHGOGO_ARTICLES.filter((a) => a.category.includes("Awards"));
-    if (selectedCategory === "enterprise") return TECHGOGO_ARTICLES.filter((a) => a.category.includes("Social Enterprise"));
-    if (selectedCategory === "research") return TECHGOGO_ARTICLES.filter((a) => a.category.includes("Research"));
-    if (selectedCategory === "stories") return TECHGOGO_ARTICLES.filter((a) => a.category.includes("Stories"));
-    if (selectedCategory === "impact") return TECHGOGO_ARTICLES.filter((a) => a.category.includes("Education"));
-    return TECHGOGO_ARTICLES;
-  }, [selectedCategory]);
+  const localizedArticles = useMemo(
+    () => TECHGOGO_ARTICLES.map((a) => getLocalizedArticle(a, language)),
+    [language]
+  );
 
-  const featuredStory = TECHGOGO_ARTICLES.find((a) => a.isFeatured) || TECHGOGO_ARTICLES[0];
+  const filteredArticles = useMemo(() => {
+    if (selectedCategory === "all") return localizedArticles;
+    if (selectedCategory === "awards") return localizedArticles.filter((a) => a.category.includes("Awards"));
+    if (selectedCategory === "enterprise") return localizedArticles.filter((a) => a.category.includes("Social Enterprise"));
+    if (selectedCategory === "research") return localizedArticles.filter((a) => a.category.includes("Research"));
+    if (selectedCategory === "stories") return localizedArticles.filter((a) => a.category.includes("Stories"));
+    if (selectedCategory === "impact") return localizedArticles.filter((a) => a.category.includes("Education"));
+    return localizedArticles;
+  }, [selectedCategory, localizedArticles]);
+
+  const featuredStory = localizedArticles.find((a) => a.isFeatured) || localizedArticles[0];
   const otherStories = filteredArticles.filter((a) => a.id !== featuredStory.id);
 
   return (

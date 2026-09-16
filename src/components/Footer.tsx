@@ -121,7 +121,9 @@ export const Footer: React.FC = () => {
                 : "Social enterprise in Kvemo Kartli. Regional digital academy and creative advertising agency."}
             </p>
             <p className="text-[11px] text-tech-muted/80">
-              ა(ა)იპი „ვი2თექ ჯორჯია“ • ს/კ 400343561
+              {language === "ka"
+                ? "ა(ა)იპი „ვი2თექ ჯორჯია“ • ს/კ 400343561"
+                : "NNLE 'We2Tech Georgia' • ID 400343561"}
             </p>
           </div>
 
@@ -249,7 +251,9 @@ export const Footer: React.FC = () => {
         {/* Bottom copyright row */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-semibold text-tech-muted">
           <div>
-            © {new Date().getFullYear()} TechGogo (ა(ა)იპი „ვი2თექ ჯორჯია“). {f.rights}
+            © {new Date().getFullYear()} TechGogo (
+            {language === "ka" ? "ა(ა)იპი „ვი2თექ ჯორჯია“" : "NNLE 'We2Tech Georgia'"}
+            ). {f.rights}
           </div>
           <div className="flex items-center gap-5">
             <Link href={`/${language}/privacy`} className="hover:text-tech-black transition-colors">

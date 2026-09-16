@@ -80,10 +80,10 @@ export default function DonatePage() {
                 <div className="flex items-baseline justify-between mb-2">
                   <div className="flex items-baseline gap-2">
                     <span className="font-display font-black text-3xl sm:text-4xl text-orangeAccent">
-                      {DONATION_CAMPAIGN.raised.toLocaleString()} ₾
+                      {DONATION_CAMPAIGN.raised.toLocaleString()} {isKa ? "₾" : "GEL"}
                     </span>
                     <span className="text-xs text-tech-muted font-bold">
-                      / {DONATION_CAMPAIGN.goal.toLocaleString()} ₾ {isKa ? "მიზანი" : "Goal"}
+                      / {DONATION_CAMPAIGN.goal.toLocaleString()} {isKa ? "₾ მიზანი" : "GEL Goal"}
                     </span>
                   </div>
                   <span className="font-display font-extrabold text-xl text-tech-black">
@@ -103,7 +103,9 @@ export default function DonatePage() {
               <div className="pt-4 border-t border-tech-black/10 flex flex-wrap items-center justify-between gap-3 text-xs font-semibold text-tech-muted">
                 <div>
                   <span>{isKa ? "ორგანიზატორი:" : "Organizer:"} </span>
-                  <strong className="text-tech-black">{DONATION_CAMPAIGN.creator}</strong>
+                  <strong className="text-tech-black">
+                    {isKa ? DONATION_CAMPAIGN.creator : (DONATION_CAMPAIGN.creatorEn || DONATION_CAMPAIGN.creator)}
+                  </strong>
                 </div>
                 <div>
                   <span>{isKa ? "მხარდამჭერი:" : "Contributors:"} </span>
@@ -160,31 +162,35 @@ export default function DonatePage() {
                 {isKa ? "ჩვენი დონორები (გამჭვირვალე რეესტრი)" : "Transparent Donor Ledger"}
               </h3>
               <div className="space-y-2.5">
-                {DONATION_CAMPAIGN.ledger.map((backer) => (
-                  <div
-                    key={backer.id}
-                    className="p-3.5 rounded-2xl bg-white border border-tech-black/30 flex items-center justify-between shadow-sm"
-                  >
-                    <div>
-                      <span className="font-bold text-xs sm:text-sm text-tech-black block">
-                        {backer.name}
-                      </span>
-                      {backer.comment && (
-                        <p className="text-[11px] text-tech-muted italic mt-0.5">
-                          „{backer.comment}“
-                        </p>
-                      )}
+                {DONATION_CAMPAIGN.ledger.map((backer) => {
+                  const name = isKa ? backer.name : (backer.nameEn || backer.name);
+                  const comment = isKa ? backer.comment : (backer.commentEn || backer.comment);
+                  return (
+                    <div
+                      key={backer.id}
+                      className="p-3.5 rounded-2xl bg-white border border-tech-black/30 flex items-center justify-between shadow-sm"
+                    >
+                      <div>
+                        <span className="font-bold text-xs sm:text-sm text-tech-black block">
+                          {name}
+                        </span>
+                        {comment && (
+                          <p className="text-[11px] text-tech-muted italic mt-0.5">
+                            „{comment}“
+                          </p>
+                        )}
+                      </div>
+                      <div className="text-right">
+                        <span className="font-display font-extrabold text-sm sm:text-base text-orangeAccent">
+                          {backer.amount} {isKa ? "₾" : "GEL"}
+                        </span>
+                        <span className="text-[10px] text-tech-muted block font-semibold">
+                          {backer.date}
+                        </span>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <span className="font-display font-extrabold text-sm sm:text-base text-orangeAccent">
-                        {backer.amount} ₾
-                      </span>
-                      <span className="text-[10px] text-tech-muted block font-semibold">
-                        {backer.date}
-                      </span>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -250,7 +256,7 @@ export default function DonatePage() {
                               : "bg-white text-tech-black hover:bg-cream-muted"
                           }`}
                         >
-                          {amt} ₾
+                          {amt} {isKa ? "₾" : "GEL"}
                         </button>
                       ))}
                     </div>
@@ -259,7 +265,7 @@ export default function DonatePage() {
                   {/* Custom Amount Input */}
                   <div>
                     <label className="block text-xs font-bold text-tech-black mb-1">
-                      {isKa ? "ან შეიყვანეთ სასურველი თანხა (₾)" : "Or Enter Custom Amount (₾)"}
+                      {isKa ? "ან შეიყვანეთ სასურველი თანხა (₾)" : "Or Enter Custom Amount (GEL)"}
                     </label>
                     <div className="relative">
                       <input
@@ -272,7 +278,7 @@ export default function DonatePage() {
                         className="w-full px-4 py-3 rounded-2xl bg-white border-[1.5px] border-tech-black text-sm text-tech-black focus:outline-none focus:ring-2 focus:ring-orangeAccent shadow-sm"
                       />
                       <span className="absolute right-4 top-1/2 -translate-y-1/2 font-display font-extrabold text-sm text-tech-black">
-                        ₾
+                        {isKa ? "₾" : "GEL"}
                       </span>
                     </div>
                   </div>
@@ -323,13 +329,13 @@ export default function DonatePage() {
                     disabled={isSubmitting || activeAmount <= 0}
                     className="tactile-btn w-full py-3.5 rounded-full bg-orangeAccent text-tech-black font-extrabold text-sm border-[1.5px] border-tech-black shadow-tactile hover:shadow-tactile-lg active:translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                   >
-                    <span>{isSubmitting ? (isKa ? "მუშავდება..." : "Processing...") : `${isKa ? "გაიღე" : "Donate"} ${activeAmount} ₾`}</span>
+                    <span>{isSubmitting ? (isKa ? "მუშავდება..." : "Processing...") : `${isKa ? "გაიღე" : "Donate"} ${activeAmount} ${isKa ? "₾" : "GEL"}`}</span>
                     <Heart className="w-4 h-4 fill-tech-black text-tech-black" />
                   </button>
 
                   <div className="flex items-center justify-center gap-1.5 text-[11px] text-tech-muted font-medium pt-2">
                     <ShieldCheck className="w-3.5 h-3.5 text-orangeAccent" />
-                    <span>{isKa ? "უსაფრთხო გადახდა • ა(ა)იპი „ვი2თექ ჯორჯია“" : "Secure non-profit contribution"}</span>
+                    <span>{isKa ? "უსაფრთხო გადახდა • ა(ა)იპი „ვი2თექ ჯორჯია“" : "Secure non-profit contribution • NNLE 'We2Tech Georgia'"}</span>
                   </div>
                 </form>
               )}

@@ -44,9 +44,15 @@ export default function CoursesPage() {
       // Search
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
-        const matchesTitle = course.title.toLowerCase().includes(q);
-        const matchesDesc = course.description.toLowerCase().includes(q);
-        const matchesCat = course.category.toLowerCase().includes(q);
+        const matchesTitle =
+          course.title.toLowerCase().includes(q) ||
+          Boolean(course.titleEn?.toLowerCase().includes(q));
+        const matchesDesc =
+          course.description.toLowerCase().includes(q) ||
+          Boolean(course.descriptionEn?.toLowerCase().includes(q));
+        const matchesCat =
+          course.category.toLowerCase().includes(q) ||
+          Boolean(course.categoryEn?.toLowerCase().includes(q));
         if (!matchesTitle && !matchesDesc && !matchesCat) return false;
       }
 

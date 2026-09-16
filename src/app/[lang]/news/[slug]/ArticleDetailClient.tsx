@@ -7,7 +7,7 @@ import PageHeader from "@/components/PageHeader";
 import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
 import { Article } from "@/types";
-import { TECHGOGO_ARTICLES } from "@/data/articlesData";
+import { TECHGOGO_ARTICLES, getLocalizedArticle } from "@/data/articlesData";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface ArticleDetailClientProps {
@@ -15,12 +15,15 @@ interface ArticleDetailClientProps {
   lang: string;
 }
 
-export default function ArticleDetailClient({ article, lang }: ArticleDetailClientProps) {
+export default function ArticleDetailClient({ article: initialArticle, lang }: ArticleDetailClientProps) {
   const { language } = useLanguage();
   const isKa = language === "ka";
+  const article = getLocalizedArticle(initialArticle, language);
   const [copied, setCopied] = useState(false);
 
-  const relatedArticles = TECHGOGO_ARTICLES.filter((a) => a.slug !== article.slug).slice(0, 3);
+  const relatedArticles = TECHGOGO_ARTICLES.filter((a) => a.slug !== article.slug)
+    .slice(0, 3)
+    .map((a) => getLocalizedArticle(a, language));
 
   const handleCopyLink = () => {
     if (typeof window !== "undefined") {

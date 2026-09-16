@@ -6,8 +6,8 @@ import { usePathname } from "next/navigation";
 import { ChevronDown, Menu, X, ArrowRight, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
-import { TECHGOGO_COURSES } from "@/data/coursesData";
-import { TECHGOGO_SERVICES } from "@/data/servicesData";
+import { TECHGOGO_COURSES, getLocalizedCourse } from "@/data/coursesData";
+import { TECHGOGO_SERVICES, getLocalizedService } from "@/data/servicesData";
 
 export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -195,26 +195,29 @@ export const Navbar: React.FC = () => {
                         <div className="px-2 py-1 text-[11px] font-bold text-tech-muted uppercase tracking-wider border-b border-tech-black/10">
                           {language === "ka" ? "აკადემიის კურსები" : "Academy Courses"}
                         </div>
-                        {TECHGOGO_COURSES.slice(0, 5).map((c) => (
-                          <Link
-                            key={c.id}
-                            href={`/${language}/courses/${c.slug}`}
-                            onClick={() => setActiveDropdown(null)}
-                            className="group/item flex items-start gap-2.5 p-2 rounded-xl text-left hover:bg-black/5 transition-colors"
-                          >
-                            <span className="w-5 h-5 rounded-md bg-yellowAccent/40 border border-tech-black/30 flex items-center justify-center text-[10px] shrink-0 mt-0.5 group-hover/item:rotate-6 transition-transform">
-                              ✦
-                            </span>
-                            <div className="flex flex-col">
-                              <span className="text-xs font-bold text-tech-black line-clamp-1">
-                                {c.title}
+                        {TECHGOGO_COURSES.slice(0, 5).map((rawCourse) => {
+                          const c = getLocalizedCourse(rawCourse, language);
+                          return (
+                            <Link
+                              key={c.id}
+                              href={`/${language}/courses/${c.slug}`}
+                              onClick={() => setActiveDropdown(null)}
+                              className="group/item flex items-start gap-2.5 p-2 rounded-xl text-left hover:bg-black/5 transition-colors"
+                            >
+                              <span className="w-5 h-5 rounded-md bg-yellowAccent/40 border border-tech-black/30 flex items-center justify-center text-[10px] shrink-0 mt-0.5 group-hover/item:rotate-6 transition-transform">
+                                ✦
                               </span>
-                              <span className="text-[11px] text-tech-muted">
-                                {c.format} • {c.price}
-                              </span>
-                            </div>
-                          </Link>
-                        ))}
+                              <div className="flex flex-col">
+                                <span className="text-xs font-bold text-tech-black line-clamp-1">
+                                  {c.title}
+                                </span>
+                                <span className="text-[11px] text-tech-muted">
+                                  {c.format} • {c.price}
+                                </span>
+                              </div>
+                            </Link>
+                          );
+                        })}
                         <Link
                           href={`/${language}/courses`}
                           onClick={() => setActiveDropdown(null)}
@@ -228,26 +231,29 @@ export const Navbar: React.FC = () => {
                         <div className="px-2 py-1 text-[11px] font-bold text-tech-muted uppercase tracking-wider border-b border-tech-black/10">
                           {language === "ka" ? "სააგენტოს სერვისები" : "Agency Services"}
                         </div>
-                        {TECHGOGO_SERVICES.map((s) => (
-                          <Link
-                            key={s.id}
-                            href={`/${language}/services/${s.slug}`}
-                            onClick={() => setActiveDropdown(null)}
-                            className="group/item flex items-start gap-2.5 p-2 rounded-xl text-left hover:bg-black/5 transition-colors"
-                          >
-                            <span className="w-5 h-5 rounded-md bg-orangeAccent/25 border border-tech-black/30 flex items-center justify-center text-[10px] shrink-0 mt-0.5 group-hover/item:rotate-6 transition-transform">
-                              ✦
-                            </span>
-                            <div className="flex flex-col">
-                              <span className="text-xs font-bold text-tech-black">
-                                {s.title}
+                        {TECHGOGO_SERVICES.map((rawService) => {
+                          const s = getLocalizedService(rawService, language);
+                          return (
+                            <Link
+                              key={s.id}
+                              href={`/${language}/services/${s.slug}`}
+                              onClick={() => setActiveDropdown(null)}
+                              className="group/item flex items-start gap-2.5 p-2 rounded-xl text-left hover:bg-black/5 transition-colors"
+                            >
+                              <span className="w-5 h-5 rounded-md bg-orangeAccent/25 border border-tech-black/30 flex items-center justify-center text-[10px] shrink-0 mt-0.5 group-hover/item:rotate-6 transition-transform">
+                                ✦
                               </span>
-                              <span className="text-[11px] text-tech-muted line-clamp-1">
-                                {s.shortDesc}
-                              </span>
-                            </div>
-                          </Link>
-                        ))}
+                              <div className="flex flex-col">
+                                <span className="text-xs font-bold text-tech-black">
+                                  {s.title}
+                                </span>
+                                <span className="text-[11px] text-tech-muted line-clamp-1">
+                                  {s.shortDesc}
+                                </span>
+                              </div>
+                            </Link>
+                          );
+                        })}
                         <Link
                           href={`/${language}/services`}
                           onClick={() => setActiveDropdown(null)}

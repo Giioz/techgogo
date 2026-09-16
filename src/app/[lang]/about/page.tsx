@@ -188,41 +188,48 @@ export default function AboutPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-          {TEAM_MEMBERS.map((member) => (
-            <div
-              key={member.id}
-              className="tactile-card bg-cream border-[1.5px] border-tech-black rounded-3xl p-7 flex flex-col justify-between shadow-tactile-sm hover:shadow-tactile transition-all"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <div
-                    className={`w-14 h-14 rounded-2xl border-[1.5px] border-tech-black flex items-center justify-center font-display font-black text-xl text-white shadow-tactile-sm ${
-                      member.accent === "orange"
-                        ? "bg-orangeAccent"
-                        : member.accent === "yellow"
-                        ? "bg-yellowAccent text-tech-black"
-                        : "bg-purpleAccent"
-                    }`}
-                  >
-                    {member.name.charAt(0)}
-                  </div>
-                  <span className="text-[11px] font-bold px-3 py-1 rounded-full bg-white border border-tech-black text-tech-black">
-                    {member.tag}
-                  </span>
-                </div>
+          {TEAM_MEMBERS.map((member) => {
+            const name = isKa ? member.name : (member.nameEn || member.name);
+            const role = isKa ? member.role : (member.roleEn || member.role);
+            const bio = isKa ? member.bio : (member.bioEn || member.bio);
+            const tag = isKa ? member.tag : (member.tagEn || member.tag);
 
-                <h3 className="font-display font-black text-xl text-tech-black mb-1">
-                  {member.name}
-                </h3>
-                <p className="text-xs font-bold text-orangeAccent mb-4">
-                  {member.role}
-                </p>
-                <p className="text-xs sm:text-sm text-tech-black/80 font-medium leading-relaxed">
-                  {member.bio}
-                </p>
+            return (
+              <div
+                key={member.id}
+                className="tactile-card bg-cream border-[1.5px] border-tech-black rounded-3xl p-7 flex flex-col justify-between shadow-tactile-sm hover:shadow-tactile transition-all"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-5">
+                    <div
+                      className={`w-14 h-14 rounded-2xl border-[1.5px] border-tech-black flex items-center justify-center font-display font-black text-xl text-white shadow-tactile-sm ${
+                        member.accent === "orange"
+                          ? "bg-orangeAccent"
+                          : member.accent === "yellow"
+                          ? "bg-yellowAccent text-tech-black"
+                          : "bg-purpleAccent"
+                      }`}
+                    >
+                      {name.charAt(0)}
+                    </div>
+                    <span className="text-[11px] font-bold px-3 py-1 rounded-full bg-white border border-tech-black text-tech-black">
+                      {tag}
+                    </span>
+                  </div>
+
+                  <h3 className="font-display font-black text-xl text-tech-black mb-1">
+                    {name}
+                  </h3>
+                  <p className="text-xs font-bold text-orangeAccent mb-4">
+                    {role}
+                  </p>
+                  <p className="text-xs sm:text-sm text-tech-black/80 font-medium leading-relaxed">
+                    {bio}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
@@ -240,30 +247,38 @@ export default function AboutPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-            {STUDENT_STORIES.map((story) => (
-              <div
-                key={story.id}
-                className="bg-cream border-[1.5px] border-tech-black rounded-2xl p-6 flex flex-col justify-between shadow-sm"
-              >
-                <div>
-                  <p className="text-sm font-semibold text-tech-black leading-relaxed italic mb-5">
-                    {story.quote}
-                  </p>
-                  <p className="text-xs text-tech-muted font-medium leading-relaxed mb-6">
-                    {story.fullStory}
-                  </p>
-                </div>
-                <div className="pt-4 border-t border-tech-black/10 flex items-center justify-between text-xs">
+            {STUDENT_STORIES.map((story) => {
+              const name = isKa ? story.name : (story.nameEn || story.name);
+              const location = isKa ? story.location : (story.locationEn || story.location);
+              const quote = isKa ? story.quote : (story.quoteEn || story.quote);
+              const fullStory = isKa ? story.fullStory : (story.fullStoryEn || story.fullStory);
+              const course = isKa ? story.course : (story.courseEn || story.course);
+
+              return (
+                <div
+                  key={story.id}
+                  className="bg-cream border-[1.5px] border-tech-black rounded-2xl p-6 flex flex-col justify-between shadow-sm"
+                >
                   <div>
-                    <span className="font-bold text-tech-black block">{story.name}</span>
-                    <span className="text-[11px] text-tech-muted">{story.location} • {story.age} წ.</span>
+                    <p className="text-sm font-semibold text-tech-black leading-relaxed italic mb-5">
+                      {quote}
+                    </p>
+                    <p className="text-xs text-tech-muted font-medium leading-relaxed mb-6">
+                      {fullStory}
+                    </p>
                   </div>
-                  <span className="px-2.5 py-1 rounded-full bg-white border border-tech-black/40 text-[10px] font-bold text-tech-black">
-                    {story.course}
-                  </span>
+                  <div className="pt-4 border-t border-tech-black/10 flex items-center justify-between text-xs">
+                    <div>
+                      <span className="font-bold text-tech-black block">{name}</span>
+                      <span className="text-[11px] text-tech-muted">{location} • {story.age} {isKa ? "წ." : "yrs"}</span>
+                    </div>
+                    <span className="px-2.5 py-1 rounded-full bg-white border border-tech-black/40 text-[10px] font-bold text-tech-black">
+                      {course}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

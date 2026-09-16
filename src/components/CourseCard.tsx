@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Star, Clock, BookOpen, ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { Course } from "@/types";
+import { getLocalizedCourse } from "@/data/coursesData";
 import CourseIllustration from "./CourseIllustration";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -13,8 +14,9 @@ interface CourseCardProps {
   index?: number;
 }
 
-export const CourseCard: React.FC<CourseCardProps> = ({ course, index = 0 }) => {
+export const CourseCard: React.FC<CourseCardProps> = ({ course: rawCourse, index = 0 }) => {
   const { language, t } = useLanguage();
+  const course = getLocalizedCourse(rawCourse, language);
   const tr = t.courses[course.id];
 
   const categoryBadgeStyles = {

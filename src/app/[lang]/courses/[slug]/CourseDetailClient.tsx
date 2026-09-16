@@ -19,7 +19,7 @@ import CourseCard from "@/components/CourseCard";
 import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
 import { Course } from "@/types";
-import { TECHGOGO_COURSES } from "@/data/coursesData";
+import { TECHGOGO_COURSES, getLocalizedCourse } from "@/data/coursesData";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface CourseDetailClientProps {
@@ -27,8 +27,9 @@ interface CourseDetailClientProps {
   lang: string;
 }
 
-export default function CourseDetailClient({ course, lang }: CourseDetailClientProps) {
+export default function CourseDetailClient({ course: initialCourse, lang }: CourseDetailClientProps) {
   const { language } = useLanguage();
+  const course = getLocalizedCourse(initialCourse, language);
 
   // Application form state
   const [formData, setFormData] = useState({
