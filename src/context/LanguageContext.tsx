@@ -1,9 +1,10 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { useRouter, usePathname, useParams } from "next/navigation";
 import { translations, TranslationData } from "@/data/translations";
 
-type Language = "en" | "ka";
+export type Language = "en" | "ka";
 
 interface LanguageContextType {
   language: Language;
@@ -13,27 +14,51 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const [language, setLanguageState] = useState<Language>("en");
+export const LanguageProvider: React.FC<{
+  children: React.ReactNode;
+  initialLanguage?: Language;
+}> = ({ children, initialLanguage = "en" }) => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const params = useParams();
+
+  const routeLang = (params?.lang as Language) === "ka" ? "ka" : "en";
+  const [language, setLanguageState] = useState<Language>(routeLang || initialLanguage);
 
   useEffect(() => {
-    // Check localStorage if available
-    const saved = localStorage.getItem("techgogo_lang") as Language | null;
-    if (saved === "en" || saved === "ka") {
-      setLanguageState(saved);
-      document.documentElement.lang = saved;
+    if (params?.lang === "en" || params?.lang === "ka") {
+      setLanguageState(params.lang as Language);
+      document.documentElement.lang = params.lang;
     }
-  }, []);
+  }, [params?.lang]);
 
-  const setLanguage = (lang: Language) => {
-    setLanguageState(lang);
-    localStorage.setItem("techgogo_lang", lang);
-    document.documentElement.lang = lang;
+  const setLanguage = (newLang: Language) => {
+    if (newLang === language) return;
+    setLanguageState(newLang);
+
+    // Save cookie for middleware detection on future visits to /
+    document.cookie = `NEXT_LOCALE=${newLang}; path=/; max-age=31536000; SameSite=Lax`;
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem("techgogo_lang", newLang);
+    }
+    document.documentElement.lang = newLang;
+
+    // Navigate to the localized route
+    if (pathname) {
+      const segments = pathname.split("/");
+      if (segments[1] === "en" || segments[1] === "ka") {
+        segments[1] = newLang;
+        const newPath = segments.join("/");
+        router.push(newPath || `/${newLang}`);
+      } else {
+        router.push(`/${newLang}${pathname}`);
+      }
+    } else {
+      router.push(`/${newLang}`);
+    }
   };
 
-  const t = translations[language];
+  const t = translations[language] || translations.en;
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t }}>

@@ -11,9 +11,9 @@ import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
 import { COURSES } from "@/data/courses";
-import { LanguageProvider, useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from "@/context/LanguageContext";
 
-function HomePageContent() {
+export default function HomePage() {
   const [selectedSubject, setSelectedSubject] = useState<string>("all");
   const { t } = useLanguage();
 
@@ -23,7 +23,6 @@ function HomePageContent() {
       if ("scrollRestoration" in window.history) {
         window.history.scrollRestoration = "manual";
       }
-      // If no explicit deep hash, stay at top on refresh
       if (!window.location.hash && window.scrollY < 80) {
         window.scrollTo(0, 0);
       }
@@ -106,13 +105,5 @@ function HomePageContent() {
       {/* 6. BOTTOM CTA BANNER & EDITORIAL FOOTER */}
       <Footer />
     </main>
-  );
-}
-
-export default function HomePage() {
-  return (
-    <LanguageProvider>
-      <HomePageContent />
-    </LanguageProvider>
   );
 }
