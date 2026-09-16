@@ -132,15 +132,42 @@ export default function CourseDetailClient({ course: initialCourse, lang }: Cour
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* LEFT COLUMN: CURRICULUM, OUTCOMES, AUDIENCE */}
           <div className="lg:col-span-8 flex flex-col gap-8">
-            {/* 1. CURRICULUM MODULES */}
-            {course.curriculum && (
+            {/* 1. WHAT YOU WILL LEARN */}
+            {course.whatYouWillLearn && course.whatYouWillLearn.length > 0 && (
               <div className="bg-cream border-[1.5px] border-tech-black rounded-3xl p-6 sm:p-10 shadow-tactile-sm">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellowAccent/30 border border-tech-black text-xs font-bold text-tech-black mb-4">
+                  <span>✦</span>
+                  <span>{isKa ? "კურსის თემატიკა" : "Key Topics"}</span>
+                </div>
+                <h2 className="font-display font-black text-2xl sm:text-3xl text-tech-black mb-6">
+                  {isKa ? "რას ისწავლით კურსზე?" : "What You'll Learn"}
+                </h2>
+
+                <div className="flex flex-col gap-3">
+                  {course.whatYouWillLearn.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="bg-white border-[1.5px] border-tech-black rounded-2xl p-4 sm:p-5 flex items-start gap-3 shadow-sm hover:shadow-tactile-sm transition-shadow"
+                    >
+                      <CheckCircle2 className="w-5 h-5 text-orangeAccent shrink-0 mt-0.5" />
+                      <p className="text-xs sm:text-sm font-semibold text-tech-black leading-relaxed">
+                        {item}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 2. CURRICULUM MODULES */}
+            {course.curriculum && (
+              <div className="bg-cream border-[1.5px] border-tech-black rounded-3xl p-6 sm:p-10 shadow-tactile-sm">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purpleAccent/20 border border-tech-black text-xs font-bold text-tech-black mb-4">
                   <span>✦</span>
                   <span>{isKa ? "სასწავლო პროგრამა" : "Curriculum Modules"}</span>
                 </div>
                 <h2 className="font-display font-black text-2xl sm:text-3xl text-tech-black mb-6">
-                  {isKa ? "რას ისწავლით კურსზე?" : "What You'll Learn"}
+                  {isKa ? "სასწავლო მოდულები და თემები" : "Detailed Curriculum"}
                 </h2>
 
                 <div className="flex flex-col gap-4">

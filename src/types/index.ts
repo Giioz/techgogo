@@ -36,6 +36,9 @@ export interface Course {
   illustrationType: "code" | "design" | "ai" | "cloud" | "data" | "mobile";
   description: string;
   descriptionEn?: string;
+  url?: string;
+  whatYouWillLearn?: string[];
+  whatYouWillLearnEn?: string[];
   curriculum?: Array<{
     moduleNumber: number;
     title: string;
@@ -68,6 +71,7 @@ export interface StatItem {
 export interface Service {
   id: string;
   slug: string;
+  url?: string;
   title: string;
   titleEn?: string;
   shortDesc: string;
@@ -93,12 +97,14 @@ export interface Service {
 export interface Article {
   id: string;
   slug: string;
+  slugAliases?: string[];
+  url?: string;
   title: string;
   titleEn?: string;
   date: string;
   category: string;
   categoryEn?: string;
-  categoryAccent: "orange" | "yellow" | "purple";
+  categoryAccent?: "orange" | "yellow" | "purple";
   readTime: string;
   readTimeEn?: string;
   excerpt: string;
@@ -109,6 +115,7 @@ export interface Article {
   citationUrl?: string;
   citationSource?: string;
   citationSourceEn?: string;
+  externalCitations?: string[];
 }
 
 export interface TeamMember {

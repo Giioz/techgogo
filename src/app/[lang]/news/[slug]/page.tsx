@@ -10,6 +10,11 @@ export async function generateStaticParams() {
   for (const lang of languages) {
     for (const article of TECHGOGO_ARTICLES) {
       params.push({ lang, slug: article.slug });
+      if (article.slugAliases) {
+        for (const alias of article.slugAliases) {
+          params.push({ lang, slug: alias });
+        }
+      }
     }
   }
 
@@ -21,7 +26,9 @@ export default function ArticleDetailPage({
 }: {
   params: { lang: string; slug: string };
 }) {
-  const article = TECHGOGO_ARTICLES.find((a) => a.slug === params.slug);
+  const article = TECHGOGO_ARTICLES.find(
+    (a) => a.slug === params.slug || a.slugAliases?.includes(params.slug)
+  );
 
   if (!article) {
     notFound();
