@@ -221,3 +221,11 @@ body {
 .animate-soft-pulse {
   animation: soft-pulse 2.5s ease-in-out infinite;
 }
+
+/* Fluid View Transitions on Language Switch */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.18s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+

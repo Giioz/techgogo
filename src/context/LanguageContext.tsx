@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { useRouter, usePathname, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { translations, TranslationData } from "@/data/translations";
 
 export type Language = "en" | "ka";
@@ -18,13 +18,11 @@ export const LanguageProvider: React.FC<{
   children: React.ReactNode;
   initialLanguage?: Language;
 }> = ({ children, initialLanguage = "en" }) => {
-  const router = useRouter();
-  const pathname = usePathname();
   const params = useParams();
-
   const routeLang = (params?.lang as Language) === "ka" ? "ka" : "en";
   const [language, setLanguageState] = useState<Language>(routeLang || initialLanguage);
 
+  // Sync with route params on direct load / external navigation
   useEffect(() => {
     if (params?.lang === "en" || params?.lang === "ka") {
       setLanguageState(params.lang as Language);
@@ -32,29 +30,53 @@ export const LanguageProvider: React.FC<{
     }
   }, [params?.lang]);
 
+  // Handle browser back and forward button navigation
+  useEffect(() => {
+    const handlePopState = () => {
+      const pathname = window.location.pathname;
+      const match = pathname.match(/^\/(en|ka)($|\/)/);
+      if (match && (match[1] === "en" || match[1] === "ka")) {
+        const targetLang = match[1] as Language;
+        setLanguageState(targetLang);
+        document.documentElement.lang = targetLang;
+        document.cookie = `NEXT_LOCALE=${targetLang}; path=/; max-age=31536000; SameSite=Lax`;
+      }
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
   const setLanguage = (newLang: Language) => {
     if (newLang === language) return;
-    setLanguageState(newLang);
 
-    // Save cookie for middleware detection on future visits to /
-    document.cookie = `NEXT_LOCALE=${newLang}; path=/; max-age=31536000; SameSite=Lax`;
-    if (typeof localStorage !== "undefined") {
-      localStorage.setItem("techgogo_lang", newLang);
-    }
-    document.documentElement.lang = newLang;
-
-    // Navigate to the localized route
-    if (pathname) {
-      const segments = pathname.split("/");
-      if (segments[1] === "en" || segments[1] === "ka") {
-        segments[1] = newLang;
-        const newPath = segments.join("/");
-        router.push(newPath || `/${newLang}`);
-      } else {
-        router.push(`/${newLang}${pathname}`);
+    const executeUpdate = () => {
+      setLanguageState(newLang);
+      document.documentElement.lang = newLang;
+      document.cookie = `NEXT_LOCALE=${newLang}; path=/; max-age=31536000; SameSite=Lax`;
+      if (typeof localStorage !== "undefined") {
+        localStorage.setItem("techgogo_lang", newLang);
       }
+
+      // Seamlessly update browser URL and history without unmounting the React tree
+      if (typeof window !== "undefined") {
+        const pathname = window.location.pathname;
+        const hash = window.location.hash;
+        const segments = pathname.split("/");
+        if (segments[1] === "en" || segments[1] === "ka") {
+          segments[1] = newLang;
+          const newPath = segments.join("/") + hash;
+          window.history.pushState({ lang: newLang }, "", newPath);
+        } else {
+          window.history.pushState({ lang: newLang }, "", `/${newLang}${pathname}${hash}`);
+        }
+      }
+    };
+
+    // Use native View Transitions API if supported for an ultra-smooth, flicker-free cross-fade
+    if (typeof document !== "undefined" && "startViewTransition" in document) {
+      (document as unknown as { startViewTransition: (cb: () => void) => void }).startViewTransition(executeUpdate);
     } else {
-      router.push(`/${newLang}`);
+      executeUpdate();
     }
   };
 
